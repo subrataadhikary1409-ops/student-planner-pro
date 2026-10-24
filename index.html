@@ -230,7 +230,28 @@
       <div class="day-tabs" id="dayTabs"></div>
       <div id="routineList" aria-live="polite"></div>
     </section>
+<section class="panel" id="studyTimer">
+  <h2>⏱️ Study Timer — পড়ার টাইমার</h2>
 
+  <p id="timerMode">📚 Study Session</p>
+
+  <div id="timerDisplay" style="font-size: 44px; font-weight: bold;
+       text-align: center; color: #2459d3; padding: 12px;">
+    25:00
+  </div>
+
+  <p id="timerStatus" style="text-align: center; color: #68758a;">
+    পড়া শুরু করতে Start চাপো।
+  </p>
+
+  <div style="display: flex; justify-content: center;
+       gap: 8px; flex-wrap: wrap;">
+    <button class="primary" id="timerStart" type="button">▶ Start</button>
+    <button class="secondary" id="timerPause" type="button">⏸ Pause</button>
+    <button class="secondary" id="timerReset" type="button">↻ Reset</button>
+    <button class="secondary" id="timerSwitch" type="button">☕ Break: 5 min</button>
+  </div>
+</section>
     <section class="panel">
       <h2>✅ Daily Tasks — আজকের পড়ার কাজ</h2>
       <form id="taskForm" class="task-add">
@@ -247,7 +268,90 @@
 
     <footer>Student Planner Pro • Your study journey starts here.</footer>
   </main>
+// ===== Study Timer =====
+let timerModeType = "study";
+let timerSeconds = 25 * 60;
+let timerInterval = null;
 
+function updateTimerDisplay() {
+  const minutes = Math.floor(timerSeconds / 60);
+  const seconds = timerSeconds % 60;
+
+  document.getElementById("timerDisplay").textContent =
+    String(minutes).padStart(2, "0") + ":" +
+    String(seconds).padStart(2, "0");
+
+  document.getElementById("timerMode").textContent =
+    timerModeType === "study"
+      ? "📚 Study Session — ২৫ মিনিট পড়া"
+      : "☕ Break Time — ৫ মিনিট বিরতি";
+
+  document.getElementById("timerSwitch").textContent =
+    timerModeType === "study" ? "☕ Break: 5 min" : "📚 Study: 25 min";
+}
+
+document.getElementById("timerStart").addEventListener("click", function () {
+  if (timerInterval !== null) return;
+
+  document.getElementById("timerStatus").textContent = "টাইমার চলছে — মন দিয়ে পড়ো!";
+
+  timerInterval = setInterval(function () {
+    if (timerSeconds > 0) {
+      timerSeconds--;
+      updateTimerDisplay();
+    }
+
+    if (timerSeconds === 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+
+      document.getElementById("timerStatus").textContent =
+        timerModeType === "study"
+          ? "পড়ার সময় শেষ! এবার একটু বিরতি নাও।"
+          : "বিরতি শেষ! আবার পড়া শুরু করো।";
+
+      alert(timerModeType === "study"
+        ? "২৫ মিনিট শেষ! এবার ৫ মিনিট বিরতি নাও।"
+        : "৫ মিনিটের বিরতি শেষ! আবার পড়াশোনা শুরু করো।");
+    }
+  }, 1000);
+});
+
+document.getElementById("timerPause").addEventListener("click", function () {
+  if (timerInterval !== null) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    document.getElementById("timerStatus").textContent = "টাইমার থামানো হয়েছে।";
+  }
+});
+
+document.getElementById("timerReset").addEventListener("click", function () {
+  if (timerInterval !== null) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  timerSeconds = timerModeType === "study" ? 25 * 60 : 5 * 60;
+  document.getElementById("timerStatus").textContent = "টাইমার রিসেট হয়েছে।";
+  updateTimerDisplay();
+});
+
+document.getElementById("timerSwitch").addEventListener("click", function () {
+  if (timerInterval !== null) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  timerModeType = timerModeType === "study" ? "break" : "study";
+  timerSeconds = timerModeType === "study" ? 25 * 60 : 5 * 60;
+
+  document.getElementById("timerStatus").textContent =
+    "নতুন সেশন প্রস্তুত। Start চাপো।";
+
+  updateTimerDisplay();
+});
+
+updateTimerDisplay();
   <script>
     const $ = (id) => document.getElementById(id);
     const days = [
