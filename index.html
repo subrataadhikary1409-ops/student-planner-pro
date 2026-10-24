@@ -1,691 +1,739 @@
+
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Planner Pro</title>
+
 <style>
 :root {
-  --blue:#2563eb;
-  --dark:#172554;
-  --bg:#f3f6fc;
-  --card:#ffffff;
-  --muted:#64748b;
-  --border:#e2e8f0;
-  --green:#16a34a;
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #172033;
+  --muted: #65718a;
+  --primary: #4f46e5;
+  --border: #e1e7f0;
+  --green: #16a34a;
+  --red: #dc2626;
 }
-* { box-sizing:border-box; }
+* { box-sizing: border-box; }
 body {
-  margin:0;
-  font-family:Arial,"Noto Sans Bengali",sans-serif;
-  background:var(--bg);
-  color:#1e293b;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
 header {
-  background:linear-gradient(135deg,#1d4ed8,#4f46e5);
-  color:white;
-  padding:24px 18px;
+  background: linear-gradient(135deg, #4338ca, #7c3aed);
+  color: white;
+  padding: 24px 16px;
 }
 .header-inner, main {
-  max-width:1050px;
-  margin:auto;
+  max-width: 1100px;
+  margin: auto;
 }
-header h1 { margin:0 0 7px; font-size:27px; }
-header p { margin:0; opacity:.9; }
-main { padding:20px 14px 40px; }
-h2 { font-size:19px; margin:0 0 16px; }
-h3 { font-size:16px; margin:0 0 12px; }
-.card {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:18px;
-  box-shadow:0 3px 12px #0f172a08;
+header h1 { margin: 0 0 8px; }
+header p { margin: 0; opacity: .9; }
+main { padding: 18px 14px 40px; }
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
 }
-.muted { color:var(--muted); font-size:13px; }
-.stats {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:12px;
-  margin:18px 0;
+nav a {
+  background: white;
+  color: var(--primary);
+  padding: 10px 13px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  text-decoration: none;
+  font-size: 14px;
+}
+section, .card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px #1e293b08;
+}
+h2 { margin-top: 0; font-size: 21px; }
+h3 { font-size: 17px; }
+.muted { color: var(--muted); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
 }
 .stat {
-  background:white;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:16px;
-  min-width:0;
+  padding: 16px;
+  background: #f8faff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
 }
-.stat-icon { font-size:23px; }
-.stat-value { font-size:24px; font-weight:700; margin:9px 0 5px; }
-.stat-label { color:var(--muted); font-size:13px; }
-.progress-track {
-  height:10px;
-  background:#e2e8f0;
-  border-radius:20px;
-  overflow:hidden;
+.stat strong {
+  display: block;
+  font-size: 27px;
+  margin-top: 8px;
+  color: var(--primary);
 }
-.progress-fill {
-  height:100%;
-  width:0;
-  background:linear-gradient(90deg,#2563eb,#6366f1);
-  transition:width .3s;
-}
-input,select,button {
-  font:inherit;
-  border-radius:9px;
-}
-input,select {
-  border:1px solid #cbd5e1;
-  padding:10px;
-  width:100%;
-  min-width:0;
-  background:white;
-  color:#1e293b;
+input, select, textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+  background: white;
+  color: var(--text);
+  margin: 5px 0 10px;
 }
 button {
-  border:0;
-  padding:10px 14px;
-  cursor:pointer;
-  background:var(--blue);
-  color:white;
-  font-weight:600;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--primary);
+  color: white;
+  font: inherit;
+  cursor: pointer;
 }
-button:hover { filter:brightness(.95); }
-button:focus-visible,input:focus-visible,select:focus-visible {
-  outline:2px solid #60a5fa;
-  outline-offset:2px;
-}
-button.secondary { background:#eaf0ff; color:#1d4ed8; }
-button.danger { background:#fee2e2; color:#b91c1c; }
-button.small { padding:7px 10px; font-size:12px; }
+button:hover { filter: brightness(.94); }
+button.secondary { background: #e8eaff; color: #3730a3; }
+button.danger { background: #fee2e2; color: #991b1b; }
+button.success { background: #dcfce7; color: #166534; }
 .row {
-  display:flex;
-  gap:9px;
-  align-items:center;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }
-.row > * { min-width:0; }
-.wrap { flex-wrap:wrap; }
-.task-form { display:grid; grid-template-columns:1fr auto; gap:9px; }
-.task-list,.routine-list { display:grid; gap:9px; margin-top:14px; }
-.task-item,.routine-item {
-  display:flex;
-  gap:10px;
-  align-items:center;
-  border:1px solid var(--border);
-  padding:11px;
-  border-radius:10px;
+.row > input, .row > select { flex: 1; min-width: 140px; }
+progress {
+  width: 100%;
+  height: 13px;
+  accent-color: var(--green);
 }
-.task-item input[type=checkbox] { width:18px; height:18px; flex-shrink:0; }
-.task-text { flex:1; overflow-wrap:anywhere; }
-.task-item.done .task-text {
-  text-decoration:line-through;
-  color:var(--muted);
+.item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
 }
-.week-tabs {
-  display:grid;
-  grid-template-columns:repeat(7,minmax(0,1fr));
-  gap:6px;
-  margin-bottom:15px;
+.item:last-child { border-bottom: 0; }
+.item span { flex: 1; overflow-wrap: anywhere; }
+.item input[type="checkbox"] { width: auto; margin: 0; }
+.done { text-decoration: line-through; color: var(--muted); }
+.timer {
+  font-size: clamp(42px, 9vw, 66px);
+  text-align: center;
+  font-weight: 700;
+  margin: 20px 0;
+  color: var(--primary);
 }
-.day-tab {
-  background:#eef2ff;
-  color:#334155;
-  padding:10px 3px;
-  font-size:13px;
+.center { text-align: center; }
+.day-card {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 10px 0;
 }
-.day-tab.active { background:var(--blue); color:white; }
-.routine-form {
-  display:grid;
-  grid-template-columns:1fr 1fr auto;
-  gap:8px;
+.chapter-meta {
+  font-size: 12px;
+  color: var(--muted);
+  display: block;
+  margin-top: 4px;
 }
-.routine-item span { flex:1; overflow-wrap:anywhere; }
-.timer-box {
-  text-align:center;
-  background:linear-gradient(150deg,#eff6ff,#eef2ff);
-  border-radius:14px;
-  padding:22px 12px;
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 20px;
 }
-.timer-time {
-  font-size:clamp(40px,8vw,62px);
-  font-weight:800;
-  letter-spacing:2px;
-  color:#1d4ed8;
-  margin:15px 0;
-  font-variant-numeric:tabular-nums;
+.small { font-size: 13px; }
+.notice {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #854d0e;
+  padding: 12px;
+  border-radius: 10px;
+  line-height: 1.5;
 }
-.timer-actions { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
-.chart {
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-around;
-  gap:10px;
-  height:180px;
-  padding:15px 4px 0;
-  border-bottom:1px solid var(--border);
-}
-.chart-column {
-  flex:1;
-  max-width:90px;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  align-items:center;
-  gap:7px;
-  min-width:0;
-}
-.chart-bar-wrap {
-  height:125px;
-  width:min(100%,42px);
-  display:flex;
-  align-items:flex-end;
-}
-.chart-bar {
-  width:100%;
-  min-height:3px;
-  border-radius:7px 7px 2px 2px;
-  background:linear-gradient(180deg,#6366f1,#2563eb);
-}
-.chart-label { font-size:12px; color:var(--muted); }
-.chart-value { font-size:11px; color:#334155; }
-.empty {
-  text-align:center;
-  color:var(--muted);
-  padding:18px 8px;
-  font-size:14px;
-}
-footer { text-align:center; color:var(--muted); font-size:12px; padding:10px; }
-@media(max-width:650px) {
-  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .routine-form { grid-template-columns:1fr 1fr; }
-  .routine-form button { grid-column:1/-1; }
-  .card { padding:14px; }
-  header h1 { font-size:23px; }
-  .week-tabs { gap:4px; }
-  .day-tab { font-size:11px; padding:10px 1px; }
+.hidden { display: none; }
+@media (max-width: 520px) {
+  section, .card { padding: 14px; }
+  header { padding: 20px 14px; }
 }
 </style>
 </head>
-<body>
 
+<body>
 <header>
   <div class="header-inner">
     <h1>📘 Student Planner Pro</h1>
-    <p>Plan your day. Track your progress. Achieve your goals.</p>
+    <p>Your personal study planner • WBCHSE Class 12</p>
   </div>
 </header>
 
 <main>
-  <section class="card">
-    <h2>👋 তোমার Study Dashboard</h2>
-    <div id="todayDate" class="muted"></div>
-    <p>প্রতিদিন একটু একটু করে এগিয়ে চলো!</p>
-    <div class="row wrap">
-      <label for="goalHours">দৈনিক পড়ার লক্ষ্য (ঘণ্টা)</label>
-      <input id="goalHours" type="number" min="0.5" max="24"
-        step="0.5" value="4" style="width:95px">
-      <button id="saveGoal" class="secondary">লক্ষ্য সংরক্ষণ</button>
-    </div>
-  </section>
+<nav>
+  <a href="#dashboard">Dashboard</a>
+  <a href="#timer">Study Timer</a>
+  <a href="#tasks">Daily Tasks</a>
+  <a href="#timetable">Timetable</a>
+  <a href="#syllabus">Chapter Tracker</a>
+  <a href="#backup">Backup</a>
+</nav>
 
-  <section class="stats">
+<section id="dashboard">
+  <h2>📊 Study Dashboard</h2>
+  <p class="muted" id="todayDate"></p>
+
+  <div class="grid">
     <div class="stat">
-      <div class="stat-icon">⏱️</div>
-      <div class="stat-value" id="studyToday">0m</div>
-      <div class="stat-label">আজকের পড়াশোনা</div>
-    </div>
-    <div class="stat">
-      <div class="stat-icon">✅</div>
-      <div class="stat-value" id="tasksDone">0/0</div>
-      <div class="stat-label">সম্পূর্ণ কাজ</div>
+      Daily study goal
+      <strong><span id="goalDisplay">4</span> hrs</strong>
     </div>
     <div class="stat">
-      <div class="stat-icon">🎯</div>
-      <div class="stat-value" id="goalPercent">0%</div>
-      <div class="stat-label">দৈনিক লক্ষ্য পূরণ</div>
+      Tasks completed
+      <strong id="taskStat">0/0</strong>
     </div>
     <div class="stat">
-      <div class="stat-icon">📅</div>
-      <div class="stat-value" id="weeklyStudy">0m</div>
-      <div class="stat-label">গত ৭ দিনের পড়া</div>
+      Syllabus completed
+      <strong id="syllabusStat">0%</strong>
     </div>
-  </section>
-
-  <section class="card">
-    <div class="row" style="justify-content:space-between;margin-bottom:10px">
-      <h2>📈 আজকের অগ্রগতি</h2>
-      <strong id="goalSummary">0 / 4 ঘণ্টা</strong>
+    <div class="stat">
+      Chapter count
+      <strong id="chapterStat">0/0</strong>
     </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="goalBar"></div>
+  </div>
+
+  <h3>Set your daily study goal</h3>
+  <div class="row">
+    <input type="number" id="dailyGoal" min="1" max="16" value="4">
+    <button id="saveGoal">Save Goal</button>
+  </div>
+
+  <h3>Overall syllabus progress</h3>
+  <progress id="overallProgress" value="0" max="100"></progress>
+  <p id="overallText" class="muted">0% completed</p>
+</section>
+
+<section id="timer">
+  <h2>⏱️ Study Timer</h2>
+  <p class="muted">Focus for 25 minutes, then take a short break.</p>
+  <div class="center">
+    <label for="timerMode">Timer mode</label>
+    <select id="timerMode">
+      <option value="focus">Focus — 25 minutes</option>
+      <option value="break">Break — 5 minutes</option>
+    </select>
+    <div class="timer" id="timerDisplay">25:00</div>
+    <p id="timerStatus" class="muted">Ready to focus</p>
+    <div class="row" style="justify-content:center">
+      <button id="timerStart">Start</button>
+      <button class="secondary" id="timerPause">Pause</button>
+      <button class="danger" id="timerReset">Reset</button>
     </div>
-    <p class="muted" id="goalMessage">পড়া শুরু করলেই অগ্রগতি এখানে দেখা যাবে।</p>
-  </section>
+  </div>
+</section>
 
-  <section class="card">
-    <h2>📊 গত ৭ দিনের Study Progress</h2>
-    <div class="chart" id="weeklyChart"></div>
-    <p class="muted">টাইমারে রেকর্ড হওয়া পড়ার সময়ের হিসাব।</p>
-  </section>
+<section id="tasks">
+  <h2>✅ Daily Tasks</h2>
+  <div class="row">
+    <input id="taskInput" placeholder="Enter a study task">
+    <button id="addTask">Add Task</button>
+  </div>
+  <div id="taskList"></div>
+</section>
 
-  <section class="card">
-    <h2>⏳ Study Timer</h2>
-    <div class="timer-box">
-      <div id="timerMode">🎯 Focus Session</div>
-      <div class="timer-time" id="timerDisplay">25:00</div>
-      <div class="muted" id="timerHint">২৫ মিনিট মন দিয়ে পড়ো।</div>
-      <div class="timer-actions" style="margin-top:18px">
-        <button id="startPause">▶ Start</button>
-        <button id="resetTimer" class="secondary">↺ Reset</button>
-        <button id="switchMode" class="secondary">☕ Break Mode</button>
-      </div>
+<section id="timetable">
+  <h2>🗓️ Weekly Timetable</h2>
+  <div class="row">
+    <select id="routineDay">
+      <option>Monday</option>
+      <option>Tuesday</option>
+      <option>Wednesday</option>
+      <option>Thursday</option>
+      <option>Friday</option>
+      <option>Saturday</option>
+      <option>Sunday</option>
+    </select>
+    <input id="routineTime" placeholder="Time (e.g. 6:00 PM)">
+    <input id="routineSubject" placeholder="Subject / activity">
+    <button id="addRoutine">Add Routine</button>
+  </div>
+  <div id="routineList"></div>
+</section>
+
+<section id="syllabus">
+  <h2>📚 WBCHSE Class 12 Chapter Tracker</h2>
+  <p class="muted">Track your Semester III and Semester IV syllabus.</p>
+
+  <div class="notice small">
+    The subject lists below are a syllabus-planning starter based on the
+    published WBCHSE Class 12 topics. Please verify each semester's exact
+    chapter allocation against your current official subject PDF before
+    relying on it for exam preparation.
+    <br>
+    Official syllabus:
+    <a href="https://wbchse.wb.gov.in/student/curriculum-syllabus/"
+       target="_blank" rel="noopener">WBCHSE Curriculum & Syllabus</a>
+  </div>
+
+  <div class="grid" style="margin-top:14px">
+    <div>
+      <label for="subjectSelect">Subject</label>
+      <select id="subjectSelect">
+        <option value="Physics">Physics</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="Mathematics">Mathematics</option>
+        <option value="Biology">Biological Science</option>
+      </select>
     </div>
-  </section>
+    <div>
+      <label for="semesterSelect">Semester</label>
+      <select id="semesterSelect">
+        <option value="III">Semester III</option>
+        <option value="IV">Semester IV</option>
+      </select>
+    </div>
+  </div>
 
-  <section class="card">
-    <h2>📝 Daily Tasks</h2>
-    <form id="taskForm" class="task-form">
-      <input id="taskInput" maxlength="150" placeholder="যেমন: Physics Chapter 1 শেষ করব" required>
-      <button type="submit">+ Add Task</button>
-    </form>
-    <div id="taskList" class="task-list"></div>
-  </section>
+  <div class="grid">
+    <div class="stat">
+      Selected subject progress
+      <strong id="subjectPercent">0%</strong>
+      <progress id="subjectProgress" value="0" max="100"></progress>
+    </div>
+    <div class="stat">
+      Selected semester
+      <strong id="semesterCount">0/0</strong>
+      <span class="muted small">Chapters completed</span>
+    </div>
+  </div>
 
-  <section class="card">
-    <h2>📅 Weekly Timetable</h2>
-    <div class="week-tabs" id="dayTabs"></div>
-    <h3 id="selectedDayTitle">আজকের রুটিন</h3>
-    <form id="routineForm" class="routine-form">
-      <input id="routineTime" placeholder="সময় (যেমন 7:00 PM)" maxlength="40" required>
-      <input id="routineSubject" placeholder="বিষয় / অধ্যায়" maxlength="100" required>
-      <button type="submit">+ Add</button>
-    </form>
-    <div id="routineList" class="routine-list"></div>
-  </section>
+  <h3 id="chapterHeading">Physics — Semester III</h3>
+  <div id="chapterList"></div>
 
-  <section class="card">
-    <h2>💾 তোমার তথ্য</h2>
-    <p class="muted">রুটিন, কাজ, লক্ষ্য ও পড়ার সময় এই ব্রাউজারে সংরক্ষিত হয়। ব্রাউজারের ডেটা মুছে ফেললে এই তথ্যও হারাতে পারে।</p>
-    <button id="exportData" class="secondary">Download Backup (JSON)</button>
-  </section>
+  <details style="margin-top:16px">
+    <summary><strong>Add a custom chapter</strong></summary>
+    <p class="muted small">Use this if your official syllabus lists an additional topic.</p>
+    <input id="customChapter" placeholder="Custom chapter name">
+    <button id="addCustomChapter">Add Chapter</button>
+  </details>
+</section>
+
+<section id="backup">
+  <h2>💾 Backup & Restore</h2>
+  <p class="muted">Download a backup of your planner data to your device.</p>
+  <div class="row">
+    <button id="exportData">Download Backup</button>
+    <label class="secondary" style="display:inline-block;padding:10px 14px;border-radius:8px;cursor:pointer">
+      Restore Backup
+      <input id="importData" type="file" accept=".json,application/json" hidden>
+    </label>
+  </div>
+  <p class="small muted">Keep your downloaded backup somewhere safe.</p>
+</section>
 </main>
 
-<footer>Student Planner Pro • Study smart, stay consistent 💙</footer>
+<footer>Student Planner Pro • Study consistently, one chapter at a time.</footer>
 
 <script>
+(() => {
 "use strict";
 
 const $ = id => document.getElementById(id);
-const STORAGE_KEY = "studentPlannerPro_v3";
 
-function localDateKey(date = new Date()) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+const KEYS = {
+  tasks: "studentPlannerPro_tasks_v1",
+  routines: "studentPlannerPro_routines_v1",
+  goal: "studentPlannerPro_goal_v1",
+  chapters: "studentPlannerPro_chapters_v1"
+};
+
+function load(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return value === null ? fallback : value;
+  } catch {
+    return fallback;
+  }
+}
+function save(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
 }
 
-function freshData() {
-  return {
-    goalHours: 4,
-    tasks: {},
-    studySeconds: {},
-    routines: {},
-    timerMode: "focus"
+let tasks = load(KEYS.tasks, []);
+let routines = load(KEYS.routines, []);
+let goal = Number(load(KEYS.goal, 4)) || 4;
+let chapterState = load(KEYS.chapters, {});
+
+if (!Array.isArray(tasks)) tasks = [];
+if (!Array.isArray(routines)) routines = [];
+if (!chapterState || typeof chapterState !== "object" ||
+    Array.isArray(chapterState)) chapterState = {};
+
+/* Syllabus list.
+   Semester grouping is an initial planner arrangement.
+   Confirm exact grouping with your current WBCHSE subject PDFs. */
+const SYLLABUS = {
+  Physics: {
+    III: [
+      "Electric Charges and Fields",
+      "Electrostatic Potential and Capacitance",
+      "Current Electricity",
+      "Moving Charges and Magnetism",
+      "Magnetism and Matter"
+    ],
+    IV: [
+      "Electromagnetic Induction",
+      "Alternating Current",
+      "Electromagnetic Waves",
+      "Ray Optics and Optical Instruments",
+      "Wave Optics",
+      "Dual Nature of Radiation and Matter",
+      "Atoms",
+      "Nuclei",
+      "Semiconductor Electronics",
+      "Communication System"
+    ]
+  },
+  Chemistry: {
+    III: [
+      "Liquid State",
+      "p-Block Elements",
+      "Haloalkanes and Haloarenes",
+      "Alcohols, Phenols and Ethers",
+      "Biomolecules",
+      "Polymers"
+    ],
+    IV: [
+      "Electrochemistry",
+      "Chemical Kinetics",
+      "d- and f-Block Elements",
+      "Coordination Compounds",
+      "Aldehydes, Ketones and Carboxylic Acids",
+      "Organic Compounds Containing Nitrogen"
+    ]
+  },
+  Mathematics: {
+    III: [
+      "Relations and Functions",
+      "Inverse Trigonometric Functions",
+      "Matrices",
+      "Determinants",
+      "Continuity and Differentiability",
+      "Applications of Derivatives",
+      "Probability"
+    ],
+    IV: [
+      "Integrals",
+      "Applications of Integrals",
+      "Differential Equations",
+      "Vectors",
+      "Three-Dimensional Geometry",
+      "Linear Programming"
+    ]
+  },
+  Biology: {
+    III: [
+      "Sexual Reproduction in Flowering Plants",
+      "Human Reproduction",
+      "Reproductive Health",
+      "Principles of Inheritance and Variation",
+      "Molecular Basis of Inheritance",
+      "Evolution"
+    ],
+    IV: [
+      "Human Health and Disease",
+      "Improvement in Food Production",
+      "Microbes in Human Welfare",
+      "Biotechnology: Principles and Processes",
+      "Biotechnology and its Applications",
+      "Organisms and Populations",
+      "Ecosystem",
+      "Biodiversity and its Conservation",
+      "Environmental Issues"
+    ]
+  }
+};
+
+/* Create a stable ID for each default chapter. */
+function chapterId(subject, semester, name) {
+  return "default_" + subject + "_" + semester + "_" +
+    name.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+}
+
+function chapterDone(id) {
+  return Boolean(chapterState[id] && chapterState[id].done);
+}
+function setChapterDone(id, done) {
+  chapterState[id] = {
+    ...(chapterState[id] || {}),
+    done: done
   };
+  save(KEYS.chapters, chapterState);
 }
 
-function loadData() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (!saved || typeof saved !== "object") return freshData();
-    return {
-      ...freshData(),
-      ...saved,
-      tasks: saved.tasks || {},
-      studySeconds: saved.studySeconds || {},
-      routines: saved.routines || {}
-    };
-  } catch (error) {
-    return freshData();
-  }
-}
+/* Dashboard */
+$("todayDate").textContent = new Date().toLocaleDateString(undefined, {
+  weekday: "long", year: "numeric", month: "long", day: "numeric"
+});
+$("dailyGoal").value = goal;
+$("goalDisplay").textContent = goal;
 
-let data = loadData();
-let selectedDay = new Date().getDay();
-let timerMode = data.timerMode === "break" ? "break" : "focus";
-let durations = { focus: 25 * 60, break: 5 * 60 };
-let remaining = durations[timerMode];
-let running = false;
-let endAt = 0;
-let intervalId = null;
-let lastTickAt = 0;
-let carryMs = 0;
-
-function saveData() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch (error) {
-    console.warn("Could not save data", error);
-  }
-}
-
-function todayTasks() {
-  return data.tasks[localDateKey()] || [];
-}
-
-function todayStudySeconds() {
-  return Number(data.studySeconds[localDateKey()] || 0);
-}
-
-function formatDuration(seconds) {
-  seconds = Math.max(0, Math.floor(seconds));
-  const hours = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  if (hours) return `${hours}h ${mins}m`;
-  if (mins) return `${mins}m`;
-  return `${seconds}s`;
-}
-
-function updateDashboard() {
-  const today = localDateKey();
-  const seconds = todayStudySeconds();
-  const tasks = todayTasks();
-  const completed = tasks.filter(task => task.done).length;
-  const goalSeconds = Math.max(0.5, Number(data.goalHours) || 4) * 3600;
-  const percent = Math.min(100, Math.round(seconds / goalSeconds * 100));
-
-  $("studyToday").textContent = formatDuration(seconds);
-  $("tasksDone").textContent = `${completed}/${tasks.length}`;
-  $("goalPercent").textContent = `${percent}%`;
-  $("goalSummary").textContent =
-    `${(seconds / 3600).toFixed(1)} / ${Number(data.goalHours).toFixed(1)} ঘণ্টা`;
-  $("goalBar").style.width = percent + "%";
-  $("goalMessage").textContent = percent >= 100
-    ? "🎉 অসাধারণ! আজকের পড়ার লক্ষ্য পূরণ হয়েছে।"
-    : `আর ${formatDuration(Math.max(0, goalSeconds - seconds))} পড়লে দৈনিক লক্ষ্য পূরণ হবে।`;
-
-  let weekSeconds = 0;
-  for (let i = 0; i < 7; i++) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    weekSeconds += Number(data.studySeconds[localDateKey(d)] || 0);
-  }
-  $("weeklyStudy").textContent = formatDuration(weekSeconds);
-  renderChart();
-}
-
-function renderChart() {
-  const entries = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    entries.push({
-      label: d.toLocaleDateString("bn-BD", { weekday: "short" }),
-      seconds: Number(data.studySeconds[localDateKey(d)] || 0)
-    });
-  }
-  const max = Math.max(3600, ...entries.map(item => item.seconds));
-  $("weeklyChart").innerHTML = entries.map(item => {
-    const height = item.seconds === 0
-      ? 3
-      : Math.max(5, Math.round(item.seconds / max * 125));
-    return `<div class="chart-column">
-      <div class="chart-value">${item.seconds ? formatDuration(item.seconds) : "0"}</div>
-      <div class="chart-bar-wrap">
-        <div class="chart-bar" style="height:${height}px" title="${formatDuration(item.seconds)}"></div>
-      </div>
-      <div class="chart-label">${item.label}</div>
-    </div>`;
-  }).join("");
-}
-
-function renderTasks() {
-  const tasks = todayTasks();
-  const list = $("taskList");
-  if (!tasks.length) {
-    list.innerHTML = '<div class="empty">এখনও কোনো কাজ যোগ করোনি। প্রথম কাজটি যোগ করো!</div>';
-    updateDashboard();
+$("saveGoal").addEventListener("click", () => {
+  const value = Number($("dailyGoal").value);
+  if (!Number.isFinite(value) || value < 1 || value > 16) {
+    alert("Please enter a daily goal between 1 and 16 hours.");
     return;
   }
+  goal = value;
+  save(KEYS.goal, goal);
+  $("goalDisplay").textContent = goal;
+});
 
-  list.innerHTML = tasks.map((task, index) => `
-    <div class="task-item ${task.done ? "done" : ""}">
-      <input type="checkbox" data-task-check="${index}"
-        ${task.done ? "checked" : ""} aria-label="কাজ সম্পন্ন">
-      <span class="task-text">${escapeHTML(task.text)}</span>
-      <button class="danger small" data-task-delete="${index}">Delete</button>
-    </div>
-  `).join("");
+function updateDashboard() {
+  const completedTasks = tasks.filter(task => task.done).length;
+  $("taskStat").textContent = `${completedTasks}/${tasks.length}`;
+
+  const all = [];
+  for (const subject of Object.keys(SYLLABUS)) {
+    for (const semester of ["III", "IV"]) {
+      for (const name of SYLLABUS[subject][semester]) {
+        all.push(chapterId(subject, semester, name));
+      }
+    }
+  }
+
+  const customIds = Object.keys(chapterState).filter(id =>
+    id.startsWith("custom_")
+  );
+  const allIds = [...all, ...customIds];
+  const done = allIds.filter(chapterDone).length;
+  const percent = allIds.length ? Math.round(done / allIds.length * 100) : 0;
+
+  $("syllabusStat").textContent = percent + "%";
+  $("chapterStat").textContent = `${done}/${allIds.length}`;
+  $("overallProgress").value = percent;
+  $("overallText").textContent = `${percent}% completed (${done} of ${allIds.length} chapters)`;
+}
+
+/* Daily tasks */
+function renderTasks() {
+  const list = $("taskList");
+  list.replaceChildren();
+
+  if (!tasks.length) {
+    list.textContent = "No tasks yet. Add your first study task above.";
+  }
+
+  tasks.forEach((task, index) => {
+    const row = document.createElement("div");
+    row.className = "item";
+
+    const check = document.createElement("input");
+    check.type = "checkbox";
+    check.checked = task.done;
+    check.setAttribute("aria-label", "Mark task completed");
+    check.addEventListener("change", () => {
+      task.done = check.checked;
+      save(KEYS.tasks, tasks);
+      renderTasks();
+      updateDashboard();
+    });
+
+    const text = document.createElement("span");
+    text.textContent = task.text;
+    if (task.done) text.className = "done";
+
+    const remove = document.createElement("button");
+    remove.className = "danger";
+    remove.textContent = "Delete";
+    remove.addEventListener("click", () => {
+      tasks.splice(index, 1);
+      save(KEYS.tasks, tasks);
+      renderTasks();
+      updateDashboard();
+    });
+
+    row.append(check, text, remove);
+    list.appendChild(row);
+  });
 
   updateDashboard();
 }
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;",
-    '"': "&quot;", "'": "&#39;"
-  })[char]);
-}
-
-$("taskForm").addEventListener("submit", event => {
-  event.preventDefault();
+$("addTask").addEventListener("click", () => {
   const text = $("taskInput").value.trim();
-  if (!text) return;
-
-  const key = localDateKey();
-  if (!data.tasks[key]) data.tasks[key] = [];
-  data.tasks[key].push({ text, done: false });
-  saveData();
+  if (!text) return alert("Please enter a task.");
+  tasks.push({ text, done: false });
+  save(KEYS.tasks, tasks);
   $("taskInput").value = "";
   renderTasks();
 });
-
-$("taskList").addEventListener("change", event => {
-  const index = event.target.dataset.taskCheck;
-  if (index === undefined) return;
-  const tasks = todayTasks();
-  if (!tasks[index]) return;
-  tasks[index].done = event.target.checked;
-  saveData();
-  renderTasks();
+$("taskInput").addEventListener("keydown", event => {
+  if (event.key === "Enter") $("addTask").click();
 });
 
-$("taskList").addEventListener("click", event => {
-  const index = event.target.dataset.taskDelete;
-  if (index === undefined) return;
-  const tasks = todayTasks();
-  tasks.splice(Number(index), 1);
-  saveData();
-  renderTasks();
-});
-
-const dayNames = ["রবিবার", "সোমবার", "মঙ্গলবার", "বুধবার", "বৃহস্পতিবার", "শুক্রবার", "শনিবার"];
-const shortDays = ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহঃ", "শুক্র", "শনি"];
-
-function renderDayTabs() {
-  $("dayTabs").innerHTML = shortDays.map((day, index) => `
-    <button type="button" class="day-tab ${selectedDay === index ? "active" : ""}"
-      data-day="${index}">${day}</button>
-  `).join("");
-  $("selectedDayTitle").textContent = `${dayNames[selectedDay]}-এর রুটিন`;
-}
-
-$("dayTabs").addEventListener("click", event => {
-  const button = event.target.closest("[data-day]");
-  if (!button) return;
-  selectedDay = Number(button.dataset.day);
-  renderDayTabs();
-  renderRoutines();
-});
-
+/* Weekly timetable */
 function renderRoutines() {
-  const routines = data.routines[selectedDay] || [];
+  const list = $("routineList");
+  list.replaceChildren();
+
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday",
+                "Friday", "Saturday", "Sunday"];
+
+  days.forEach(day => {
+    const dayItems = routines.filter(item => item.day === day);
+    if (!dayItems.length) return;
+
+    const card = document.createElement("div");
+    card.className = "day-card";
+    const heading = document.createElement("h3");
+    heading.textContent = day;
+    card.appendChild(heading);
+
+    dayItems.forEach(item => {
+      const index = routines.indexOf(item);
+      const row = document.createElement("div");
+      row.className = "item";
+
+      const text = document.createElement("span");
+      text.textContent = `${item.time} — ${item.subject}`;
+
+      const remove = document.createElement("button");
+      remove.className = "danger";
+      remove.textContent = "Delete";
+      remove.addEventListener("click", () => {
+        routines.splice(index, 1);
+        save(KEYS.routines, routines);
+        renderRoutines();
+      });
+
+      row.append(text, remove);
+      card.appendChild(row);
+    });
+
+    list.appendChild(card);
+  });
+
   if (!routines.length) {
-    $("routineList").innerHTML = '<div class="empty">এই দিনের জন্য কোনো রুটিন নেই। নিচে যোগ করো।</div>';
-    return;
+    list.textContent = "No routines yet. Add a routine above.";
   }
-  $("routineList").innerHTML = routines.map((item, index) => `
-    <div class="routine-item">
-      <strong>${escapeHTML(item.time)}</strong>
-      <span>${escapeHTML(item.subject)}</span>
-      <button class="danger small" data-routine-delete="${index}">Delete</button>
-    </div>
-  `).join("");
 }
 
-$("routineForm").addEventListener("submit", event => {
-  event.preventDefault();
+$("addRoutine").addEventListener("click", () => {
+  const day = $("routineDay").value;
   const time = $("routineTime").value.trim();
   const subject = $("routineSubject").value.trim();
-  if (!time || !subject) return;
-  if (!data.routines[selectedDay]) data.routines[selectedDay] = [];
-  data.routines[selectedDay].push({ time, subject });
-  saveData();
+
+  if (!time || !subject) {
+    return alert("Please enter both time and subject.");
+  }
+
+  routines.push({ day, time, subject });
+  save(KEYS.routines, routines);
   $("routineTime").value = "";
   $("routineSubject").value = "";
   renderRoutines();
 });
 
-$("routineList").addEventListener("click", event => {
-  const index = event.target.dataset.routineDelete;
-  if (index === undefined) return;
-  data.routines[selectedDay].splice(Number(index), 1);
-  saveData();
-  renderRoutines();
-});
+/* Chapter tracker */
+function renderChapters() {
+  const subject = $("subjectSelect").value;
+  const semester = $("semesterSelect").value;
+  const list = $("chapterList");
+  const heading = $("chapterHeading");
+  list.replaceChildren();
 
-$("saveGoal").addEventListener("click", () => {
-  const value = Number($("goalHours").value);
-  if (!Number.isFinite(value) || value < 0.5 || value > 24) {
-    alert("দৈনিক লক্ষ্য ০.৫ থেকে ২৪ ঘণ্টার মধ্যে দাও।");
-    return;
-  }
-  data.goalHours = value;
-  saveData();
-  updateDashboard();
-});
+  heading.textContent = `${subject} — Semester ${semester}`;
 
-function renderTimer() {
-  const mins = Math.floor(remaining / 60);
-  const secs = remaining % 60;
-  $("timerDisplay").textContent =
-    `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-  $("timerMode").textContent = timerMode === "focus"
-    ? "🎯 Focus Session" : "☕ Break Session";
-  $("timerHint").textContent = timerMode === "focus"
-    ? "২৫ মিনিট মন দিয়ে পড়ো।" : "৫ মিনিট বিশ্রাম নাও।";
-  $("startPause").textContent = running ? "⏸ Pause" : "▶ Start";
-  $("switchMode").textContent = timerMode === "focus"
-    ? "☕ Break Mode" : "🎯 Focus Mode";
-}
+  const defaults = SYLLABUS[subject][semester].map(name => ({
+    id: chapterId(subject, semester, name),
+    name,
+    custom: false
+  }));
 
-function stopTimer() {
-  running = false;
-  if (intervalId !== null) clearInterval(intervalId);
-  intervalId = null;
-  lastTickAt = 0;
-  carryMs = 0;
-  renderTimer();
-}
+  const custom = Object.keys(chapterState)
+    .filter(id => id.startsWith("custom_" + subject + "_" + semester + "_"))
+    .map(id => ({
+      id,
+      name: chapterState[id].name || "Custom chapter",
+      custom: true
+    }));
 
-function startTimer() {
-  if (running) return;
-  running = true;
-  endAt = Date.now() + remaining * 1000;
-  lastTickAt = Date.now();
-  carryMs = 0;
-  intervalId = setInterval(tickTimer, 250);
-  renderTimer();
-}
+  const chapters = [...defaults, ...custom];
+  const completed = chapters.filter(ch => chapterDone(ch.id)).length;
+  const percent = chapters.length
+    ? Math.round(completed / chapters.length * 100)
+    : 0;
 
-function tickTimer() {
-  const now = Date.now();
-  if (timerMode === "focus") {
-    carryMs += now - lastTickAt;
-    const wholeSeconds = Math.floor(carryMs / 1000);
-    if (wholeSeconds > 0) {
-      data.studySeconds[localDateKey()] =
-        todayStudySeconds() + wholeSeconds;
-      carryMs -= wholeSeconds * 1000;
-      saveData();
+  $("subjectPercent").textContent = percent + "%";
+  $("subjectProgress").value = percent;
+  $("semesterCount").textContent = `${completed}/${chapters.length}`;
+
+  chapters.forEach(chapter => {
+    const row = document.createElement("div");
+    row.className = "item";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = chapterDone(chapter.id);
+    checkbox.setAttribute("aria-label", "Mark chapter completed");
+
+    const textWrap = document.createElement("span");
+    const name = document.createElement("span");
+    name.textContent = chapter.name;
+    if (chapterDone(chapter.id)) name.className = "done";
+    textWrap.appendChild(name);
+
+    if (chapter.custom) {
+      const meta = document.createElement("small");
+      meta.className = "chapter-meta";
+      meta.textContent = "Custom chapter";
+      textWrap.appendChild(meta);
+    }
+
+    checkbox.addEventListener("change", () => {
+      setChapterDone(chapter.id, checkbox.checked);
+      renderChapters();
       updateDashboard();
+    });
+
+    row.append(checkbox, textWrap);
+
+    if (chapter.custom) {
+      const remove = document.createElement("button");
+      remove.className = "danger";
+      remove.textContent = "Delete";
+      remove.addEventListener("click", () => {
+        delete chapterState[chapter.id];
+        save(KEYS.chapters, chapterState);
+        renderChapters();
+        updateDashboard();
+      });
+      row.appendChild(remove);
     }
-  }
-  lastTickAt = now;
-  remaining = Math.max(0, Math.ceil((endAt - now) / 1000));
 
-  if (remaining <= 0) {
-    stopTimer();
-    if (timerMode === "focus") {
-      timerMode = "break";
-      data.timerMode = timerMode;
-      remaining = durations.break;
-      saveData();
-      renderTimer();
-      alert("Focus session শেষ! এবার একটু বিরতি নাও।");
-    } else {
-      timerMode = "focus";
-      data.timerMode = timerMode;
-      remaining = durations.focus;
-      saveData();
-      renderTimer();
-      alert("বিরতি শেষ! আবার পড়া শুরু করতে পারো।");
-    }
-    return;
-  }
-  renderTimer();
-}
-
-$("startPause").addEventListener("click", () => {
-  if (running) stopTimer();
-  else startTimer();
-});
-
-$("resetTimer").addEventListener("click", () => {
-  stopTimer();
-  remaining = durations[timerMode];
-  renderTimer();
-});
-
-$("switchMode").addEventListener("click", () => {
-  stopTimer();
-  timerMode = timerMode === "focus" ? "break" : "focus";
-  data.timerMode = timerMode;
-  remaining = durations[timerMode];
-  saveData();
-  renderTimer();
-});
-
-$("exportData").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: "application/json"
+    list.appendChild(row);
   });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "student-planner-backup.json";
-  link.click();
-  URL.revokeObjectURL(url);
-});
 
-function init() {
-  $("todayDate").textContent = new Date().toLocaleDateString("bn-BD", {
-    weekday: "long", year: "numeric", month: "long", day: "numeric"
-  });
-  $("goalHours").value = data.goalHours;
-  renderDayTabs();
-  renderTasks();
-  renderRoutines();
   updateDashboard();
-  renderTimer();
 }
 
-init();
-</script>
-</body>
-</html>
+$("subjectSelect").addEventListener("change", renderChapters);
+$("semesterSelect").addEventListener("change", renderChapters);
 
+$("addCustomChapter").addEventListener("click", () => {
+  const name = $("customChapter").value.trim();
+  if (!name) return alert("Please enter a chapter name.");
+
+  const subject = $("subjectSelect").value;
+  const semester = $("semesterSelect").value;
+  const id = "custom_" + subject + "_" + semester + "_" + Date.now();
+
+  chapterState[id] = { name, done: false };
+  save(KEYS.chapters, chapter
