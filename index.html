@@ -1,862 +1,691 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#2459d3">
-  <title>Student Planner Pro</title>
-
-  <style>
-    :root {
-      --blue: #2459d3;
-      --light: #edf3ff;
-      --text: #17243b;
-      --muted: #68758a;
-      --border: #e2e8f2;
-      --white: #ffffff;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: #f4f7fc;
-      color: var(--text);
-      font-family: Arial, "Noto Sans Bengali", sans-serif;
-    }
-
-    header {
-      background: linear-gradient(135deg, #2459d3, #5487f4);
-      color: white;
-      padding: 24px 18px;
-    }
-
-    .header-inner,
-    main {
-      width: min(100% - 28px, 900px);
-      margin: auto;
-    }
-
-    header h1 {
-      margin: 0 0 8px;
-      font-size: 26px;
-    }
-
-    header p {
-      margin: 0;
-      opacity: 0.92;
-      line-height: 1.6;
-    }
-
-    main {
-      padding: 20px 0 40px;
-    }
-
-    .date-line {
-      color: var(--muted);
-      margin: 0 0 18px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .stat,
-    .panel {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 17px;
-      box-shadow: 0 3px 12px #142d5708;
-    }
-
-    .stat small {
-      color: var(--muted);
-    }
-
-    .stat strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 24px;
-    }
-
-    .panel {
-      margin-bottom: 18px;
-    }
-
-    h2 {
-      font-size: 19px;
-      margin: 0 0 15px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    input,
-    select {
-      width: 100%;
-      margin-top: 7px;
-      padding: 11px;
-      border: 1px solid #d5deed;
-      border-radius: 9px;
-      background: white;
-      color: var(--text);
-      font: inherit;
-      min-width: 0;
-    }
-
-    input:focus,
-    select:focus {
-      outline: 2px solid #b7ccff;
-      border-color: var(--blue);
-    }
-
-    button {
-      border: 0;
-      border-radius: 9px;
-      padding: 11px 14px;
-      font: inherit;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    button:focus-visible {
-      outline: 2px solid #2459d3;
-      outline-offset: 3px;
-    }
-
-    .primary {
-      background: var(--blue);
-      color: white;
-    }
-
-    .secondary {
-      background: var(--light);
-      color: var(--blue);
-    }
-
-    .danger {
-      background: #fff0f0;
-      color: #b42323;
-    }
-
-    .form-actions {
-      margin-top: 14px;
-    }
-
-    .day-tabs {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 2px 0 12px;
-    }
-
-    .day-tabs button {
-      white-space: nowrap;
-      background: #edf1f8;
-    }
-
-    .day-tabs button.active {
-      background: var(--blue);
-      color: white;
-    }
-
-    .entry {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .entry:last-child {
-      border-bottom: 0;
-    }
-
-    .entry-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .entry-info strong {
-      display: block;
-      overflow-wrap: anywhere;
-    }
-
-    .entry-info small {
-      color: var(--muted);
-      display: block;
-      margin-top: 5px;
-    }
-
-    .entry button {
-      padding: 8px 10px;
-    }
-
-    .empty {
-      color: var(--muted);
-      padding: 12px 0;
-      line-height: 1.6;
-    }
-
-    #timerMode {
-      text-align: center;
-      color: var(--muted);
-    }
-
-    #timerDisplay {
-      font-size: clamp(40px, 10vw, 56px);
-      font-weight: bold;
-      text-align: center;
-      color: var(--blue);
-      padding: 12px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    #timerStatus {
-      text-align: center;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .timer-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .task-add {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .task-add input {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .task-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .task-row input {
-      width: 18px;
-      min-width: 18px;
-      margin: 0;
-    }
-
-    .task-row span {
-      flex: 1;
-      overflow-wrap: anywhere;
-    }
-
-    .task-row.done span {
-      text-decoration: line-through;
-      color: var(--muted);
-    }
-
-    .progress-track {
-      background: #e6edfa;
-      height: 9px;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-top: 12px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0;
-      background: var(--blue);
-      transition: width 0.2s;
-    }
-
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      padding: 10px;
-    }
-
-    @media (max-width: 520px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      header h1 {
-        font-size: 23px;
-      }
-
-      .stat,
-      .panel {
-        padding: 14px;
-      }
-
-      .timer-buttons button {
-        padding: 10px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Planner Pro</title>
+<style>
+:root {
+  --blue:#2563eb;
+  --dark:#172554;
+  --bg:#f3f6fc;
+  --card:#ffffff;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --green:#16a34a;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+  background:var(--bg);
+  color:#1e293b;
+}
+header {
+  background:linear-gradient(135deg,#1d4ed8,#4f46e5);
+  color:white;
+  padding:24px 18px;
+}
+.header-inner, main {
+  max-width:1050px;
+  margin:auto;
+}
+header h1 { margin:0 0 7px; font-size:27px; }
+header p { margin:0; opacity:.9; }
+main { padding:20px 14px 40px; }
+h2 { font-size:19px; margin:0 0 16px; }
+h3 { font-size:16px; margin:0 0 12px; }
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 3px 12px #0f172a08;
+}
+.muted { color:var(--muted); font-size:13px; }
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin:18px 0;
+}
+.stat {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  min-width:0;
+}
+.stat-icon { font-size:23px; }
+.stat-value { font-size:24px; font-weight:700; margin:9px 0 5px; }
+.stat-label { color:var(--muted); font-size:13px; }
+.progress-track {
+  height:10px;
+  background:#e2e8f0;
+  border-radius:20px;
+  overflow:hidden;
+}
+.progress-fill {
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#2563eb,#6366f1);
+  transition:width .3s;
+}
+input,select,button {
+  font:inherit;
+  border-radius:9px;
+}
+input,select {
+  border:1px solid #cbd5e1;
+  padding:10px;
+  width:100%;
+  min-width:0;
+  background:white;
+  color:#1e293b;
+}
+button {
+  border:0;
+  padding:10px 14px;
+  cursor:pointer;
+  background:var(--blue);
+  color:white;
+  font-weight:600;
+}
+button:hover { filter:brightness(.95); }
+button:focus-visible,input:focus-visible,select:focus-visible {
+  outline:2px solid #60a5fa;
+  outline-offset:2px;
+}
+button.secondary { background:#eaf0ff; color:#1d4ed8; }
+button.danger { background:#fee2e2; color:#b91c1c; }
+button.small { padding:7px 10px; font-size:12px; }
+.row {
+  display:flex;
+  gap:9px;
+  align-items:center;
+}
+.row > * { min-width:0; }
+.wrap { flex-wrap:wrap; }
+.task-form { display:grid; grid-template-columns:1fr auto; gap:9px; }
+.task-list,.routine-list { display:grid; gap:9px; margin-top:14px; }
+.task-item,.routine-item {
+  display:flex;
+  gap:10px;
+  align-items:center;
+  border:1px solid var(--border);
+  padding:11px;
+  border-radius:10px;
+}
+.task-item input[type=checkbox] { width:18px; height:18px; flex-shrink:0; }
+.task-text { flex:1; overflow-wrap:anywhere; }
+.task-item.done .task-text {
+  text-decoration:line-through;
+  color:var(--muted);
+}
+.week-tabs {
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:6px;
+  margin-bottom:15px;
+}
+.day-tab {
+  background:#eef2ff;
+  color:#334155;
+  padding:10px 3px;
+  font-size:13px;
+}
+.day-tab.active { background:var(--blue); color:white; }
+.routine-form {
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:8px;
+}
+.routine-item span { flex:1; overflow-wrap:anywhere; }
+.timer-box {
+  text-align:center;
+  background:linear-gradient(150deg,#eff6ff,#eef2ff);
+  border-radius:14px;
+  padding:22px 12px;
+}
+.timer-time {
+  font-size:clamp(40px,8vw,62px);
+  font-weight:800;
+  letter-spacing:2px;
+  color:#1d4ed8;
+  margin:15px 0;
+  font-variant-numeric:tabular-nums;
+}
+.timer-actions { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
+.chart {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-around;
+  gap:10px;
+  height:180px;
+  padding:15px 4px 0;
+  border-bottom:1px solid var(--border);
+}
+.chart-column {
+  flex:1;
+  max-width:90px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  gap:7px;
+  min-width:0;
+}
+.chart-bar-wrap {
+  height:125px;
+  width:min(100%,42px);
+  display:flex;
+  align-items:flex-end;
+}
+.chart-bar {
+  width:100%;
+  min-height:3px;
+  border-radius:7px 7px 2px 2px;
+  background:linear-gradient(180deg,#6366f1,#2563eb);
+}
+.chart-label { font-size:12px; color:var(--muted); }
+.chart-value { font-size:11px; color:#334155; }
+.empty {
+  text-align:center;
+  color:var(--muted);
+  padding:18px 8px;
+  font-size:14px;
+}
+footer { text-align:center; color:var(--muted); font-size:12px; padding:10px; }
+@media(max-width:650px) {
+  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .routine-form { grid-template-columns:1fr 1fr; }
+  .routine-form button { grid-column:1/-1; }
+  .card { padding:14px; }
+  header h1 { font-size:23px; }
+  .week-tabs { gap:4px; }
+  .day-tab { font-size:11px; padding:10px 1px; }
+}
+</style>
 </head>
-
 <body>
-  <header>
-    <div class="header-inner">
-      <h1>📘 Student Planner Pro</h1>
-      <p>তোমার পড়াশোনা, তোমার পরিকল্পনা | Plan. Study. Progress.</p>
+
+<header>
+  <div class="header-inner">
+    <h1>📘 Student Planner Pro</h1>
+    <p>Plan your day. Track your progress. Achieve your goals.</p>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h2>👋 তোমার Study Dashboard</h2>
+    <div id="todayDate" class="muted"></div>
+    <p>প্রতিদিন একটু একটু করে এগিয়ে চলো!</p>
+    <div class="row wrap">
+      <label for="goalHours">দৈনিক পড়ার লক্ষ্য (ঘণ্টা)</label>
+      <input id="goalHours" type="number" min="0.5" max="24"
+        step="0.5" value="4" style="width:95px">
+      <button id="saveGoal" class="secondary">লক্ষ্য সংরক্ষণ</button>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <p class="date-line" id="todayDate"></p>
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-icon">⏱️</div>
+      <div class="stat-value" id="studyToday">0m</div>
+      <div class="stat-label">আজকের পড়াশোনা</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value" id="tasksDone">0/0</div>
+      <div class="stat-label">সম্পূর্ণ কাজ</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-value" id="goalPercent">0%</div>
+      <div class="stat-label">দৈনিক লক্ষ্য পূরণ</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">📅</div>
+      <div class="stat-value" id="weeklyStudy">0m</div>
+      <div class="stat-label">গত ৭ দিনের পড়া</div>
+    </div>
+  </section>
 
-    <div class="stats">
-      <div class="stat">
-        <small>আজকের রুটিন / Today's Classes</small>
-        <strong id="todayCount">0</strong>
-      </div>
+  <section class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:10px">
+      <h2>📈 আজকের অগ্রগতি</h2>
+      <strong id="goalSummary">0 / 4 ঘণ্টা</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="goalBar"></div>
+    </div>
+    <p class="muted" id="goalMessage">পড়া শুরু করলেই অগ্রগতি এখানে দেখা যাবে।</p>
+  </section>
 
-      <div class="stat">
-        <small>কাজ সম্পন্ন / Tasks Done</small>
-        <strong id="taskCount">0/0</strong>
+  <section class="card">
+    <h2>📊 গত ৭ দিনের Study Progress</h2>
+    <div class="chart" id="weeklyChart"></div>
+    <p class="muted">টাইমারে রেকর্ড হওয়া পড়ার সময়ের হিসাব।</p>
+  </section>
+
+  <section class="card">
+    <h2>⏳ Study Timer</h2>
+    <div class="timer-box">
+      <div id="timerMode">🎯 Focus Session</div>
+      <div class="timer-time" id="timerDisplay">25:00</div>
+      <div class="muted" id="timerHint">২৫ মিনিট মন দিয়ে পড়ো।</div>
+      <div class="timer-actions" style="margin-top:18px">
+        <button id="startPause">▶ Start</button>
+        <button id="resetTimer" class="secondary">↺ Reset</button>
+        <button id="switchMode" class="secondary">☕ Break Mode</button>
       </div>
     </div>
+  </section>
 
-    <!-- Routine Form -->
-    <section class="panel">
-      <h2>📅 Daily Timetable — রুটিন তৈরি করো</h2>
+  <section class="card">
+    <h2>📝 Daily Tasks</h2>
+    <form id="taskForm" class="task-form">
+      <input id="taskInput" maxlength="150" placeholder="যেমন: Physics Chapter 1 শেষ করব" required>
+      <button type="submit">+ Add Task</button>
+    </form>
+    <div id="taskList" class="task-list"></div>
+  </section>
 
-      <form id="routineForm">
-        <div class="form-grid">
-          <label>
-            বিষয় / Subject
-            <input
-              id="subject"
-              type="text"
-              maxlength="80"
-              placeholder="যেমন: Physics / পদার্থবিদ্যা"
-              required
-            >
-          </label>
+  <section class="card">
+    <h2>📅 Weekly Timetable</h2>
+    <div class="week-tabs" id="dayTabs"></div>
+    <h3 id="selectedDayTitle">আজকের রুটিন</h3>
+    <form id="routineForm" class="routine-form">
+      <input id="routineTime" placeholder="সময় (যেমন 7:00 PM)" maxlength="40" required>
+      <input id="routineSubject" placeholder="বিষয় / অধ্যায়" maxlength="100" required>
+      <button type="submit">+ Add</button>
+    </form>
+    <div id="routineList" class="routine-list"></div>
+  </section>
 
-          <label>
-            দিন / Day
-            <select id="routineDay" required>
-              <option value="1">সোমবার / Monday</option>
-              <option value="2">মঙ্গলবার / Tuesday</option>
-              <option value="3">বুধবার / Wednesday</option>
-              <option value="4">বৃহস্পতিবার / Thursday</option>
-              <option value="5">শুক্রবার / Friday</option>
-              <option value="6">শনিবার / Saturday</option>
-              <option value="0">রবিবার / Sunday</option>
-            </select>
-          </label>
+  <section class="card">
+    <h2>💾 তোমার তথ্য</h2>
+    <p class="muted">রুটিন, কাজ, লক্ষ্য ও পড়ার সময় এই ব্রাউজারে সংরক্ষিত হয়। ব্রাউজারের ডেটা মুছে ফেললে এই তথ্যও হারাতে পারে।</p>
+    <button id="exportData" class="secondary">Download Backup (JSON)</button>
+  </section>
+</main>
 
-          <label>
-            শুরুর সময় / Start
-            <input id="startTime" type="time" required>
-          </label>
+<footer>Student Planner Pro • Study smart, stay consistent 💙</footer>
 
-          <label>
-            শেষের সময় / End
-            <input id="endTime" type="time" required>
-          </label>
-        </div>
+<script>
+"use strict";
 
-        <div class="form-actions">
-          <button class="primary" type="submit">
-            ＋ রুটিন যোগ করো
-          </button>
-        </div>
-      </form>
-    </section>
+const $ = id => document.getElementById(id);
+const STORAGE_KEY = "studentPlannerPro_v3";
 
-    <!-- Weekly Timetable -->
-    <section class="panel">
-      <h2>🗓️ Weekly Timetable — সাপ্তাহিক রুটিন</h2>
-      <div class="day-tabs" id="dayTabs"></div>
-      <div id="routineList" aria-live="polite"></div>
-    </section>
+function localDateKey(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
 
-    <!-- Study Timer -->
-    <section class="panel" id="studyTimer">
-      <h2>⏱️ Study Timer — পড়ার টাইমার</h2>
+function freshData() {
+  return {
+    goalHours: 4,
+    tasks: {},
+    studySeconds: {},
+    routines: {},
+    timerMode: "focus"
+  };
+}
 
-      <p id="timerMode">📚 Study Session</p>
+function loadData() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!saved || typeof saved !== "object") return freshData();
+    return {
+      ...freshData(),
+      ...saved,
+      tasks: saved.tasks || {},
+      studySeconds: saved.studySeconds || {},
+      routines: saved.routines || {}
+    };
+  } catch (error) {
+    return freshData();
+  }
+}
 
-      <div id="timerDisplay">25:00</div>
+let data = loadData();
+let selectedDay = new Date().getDay();
+let timerMode = data.timerMode === "break" ? "break" : "focus";
+let durations = { focus: 25 * 60, break: 5 * 60 };
+let remaining = durations[timerMode];
+let running = false;
+let endAt = 0;
+let intervalId = null;
+let lastTickAt = 0;
+let carryMs = 0;
 
-      <p id="timerStatus" aria-live="polite">
-        পড়া শুরু করতে Start চাপো।
-      </p>
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.warn("Could not save data", error);
+  }
+}
 
-      <div class="timer-buttons">
-        <button class="primary" id="timerStart" type="button">
-          ▶ Start
-        </button>
+function todayTasks() {
+  return data.tasks[localDateKey()] || [];
+}
 
-        <button class="secondary" id="timerPause" type="button">
-          ⏸ Pause
-        </button>
+function todayStudySeconds() {
+  return Number(data.studySeconds[localDateKey()] || 0);
+}
 
-        <button class="secondary" id="timerReset" type="button">
-          ↻ Reset
-        </button>
+function formatDuration(seconds) {
+  seconds = Math.max(0, Math.floor(seconds));
+  const hours = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  if (hours) return `${hours}h ${mins}m`;
+  if (mins) return `${mins}m`;
+  return `${seconds}s`;
+}
 
-        <button class="secondary" id="timerSwitch" type="button">
-          ☕ Break: 5 min
-        </button>
+function updateDashboard() {
+  const today = localDateKey();
+  const seconds = todayStudySeconds();
+  const tasks = todayTasks();
+  const completed = tasks.filter(task => task.done).length;
+  const goalSeconds = Math.max(0.5, Number(data.goalHours) || 4) * 3600;
+  const percent = Math.min(100, Math.round(seconds / goalSeconds * 100));
+
+  $("studyToday").textContent = formatDuration(seconds);
+  $("tasksDone").textContent = `${completed}/${tasks.length}`;
+  $("goalPercent").textContent = `${percent}%`;
+  $("goalSummary").textContent =
+    `${(seconds / 3600).toFixed(1)} / ${Number(data.goalHours).toFixed(1)} ঘণ্টা`;
+  $("goalBar").style.width = percent + "%";
+  $("goalMessage").textContent = percent >= 100
+    ? "🎉 অসাধারণ! আজকের পড়ার লক্ষ্য পূরণ হয়েছে।"
+    : `আর ${formatDuration(Math.max(0, goalSeconds - seconds))} পড়লে দৈনিক লক্ষ্য পূরণ হবে।`;
+
+  let weekSeconds = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    weekSeconds += Number(data.studySeconds[localDateKey(d)] || 0);
+  }
+  $("weeklyStudy").textContent = formatDuration(weekSeconds);
+  renderChart();
+}
+
+function renderChart() {
+  const entries = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    entries.push({
+      label: d.toLocaleDateString("bn-BD", { weekday: "short" }),
+      seconds: Number(data.studySeconds[localDateKey(d)] || 0)
+    });
+  }
+  const max = Math.max(3600, ...entries.map(item => item.seconds));
+  $("weeklyChart").innerHTML = entries.map(item => {
+    const height = item.seconds === 0
+      ? 3
+      : Math.max(5, Math.round(item.seconds / max * 125));
+    return `<div class="chart-column">
+      <div class="chart-value">${item.seconds ? formatDuration(item.seconds) : "0"}</div>
+      <div class="chart-bar-wrap">
+        <div class="chart-bar" style="height:${height}px" title="${formatDuration(item.seconds)}"></div>
       </div>
-    </section>
+      <div class="chart-label">${item.label}</div>
+    </div>`;
+  }).join("");
+}
 
-    <!-- Daily Tasks -->
-    <section class="panel">
-      <h2>✅ Daily Tasks — আজকের পড়ার কাজ</h2>
+function renderTasks() {
+  const tasks = todayTasks();
+  const list = $("taskList");
+  if (!tasks.length) {
+    list.innerHTML = '<div class="empty">এখনও কোনো কাজ যোগ করোনি। প্রথম কাজটি যোগ করো!</div>';
+    updateDashboard();
+    return;
+  }
 
-      <form id="taskForm" class="task-add">
-        <input
-          id="taskInput"
-          type="text"
-          maxlength="160"
-          placeholder="যেমন: Physics Chapter 1 revision"
-          required
-        >
-        <button class="primary" type="submit">যোগ</button>
-      </form>
+  list.innerHTML = tasks.map((task, index) => `
+    <div class="task-item ${task.done ? "done" : ""}">
+      <input type="checkbox" data-task-check="${index}"
+        ${task.done ? "checked" : ""} aria-label="কাজ সম্পন্ন">
+      <span class="task-text">${escapeHTML(task.text)}</span>
+      <button class="danger small" data-task-delete="${index}">Delete</button>
+    </div>
+  `).join("");
 
-      <div id="taskList" aria-live="polite"></div>
+  updateDashboard();
+}
 
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[char]);
+}
 
-      <small id="progressText" class="empty"></small>
-    </section>
+$("taskForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const text = $("taskInput").value.trim();
+  if (!text) return;
 
-    <footer>
-      Student Planner Pro • Your study journey starts here.
-    </footer>
-  </main>
+  const key = localDateKey();
+  if (!data.tasks[key]) data.tasks[key] = [];
+  data.tasks[key].push({ text, done: false });
+  saveData();
+  $("taskInput").value = "";
+  renderTasks();
+});
 
-  <script>
-    "use strict";
+$("taskList").addEventListener("change", event => {
+  const index = event.target.dataset.taskCheck;
+  if (index === undefined) return;
+  const tasks = todayTasks();
+  if (!tasks[index]) return;
+  tasks[index].done = event.target.checked;
+  saveData();
+  renderTasks();
+});
 
-    // ===== General Settings =====
+$("taskList").addEventListener("click", event => {
+  const index = event.target.dataset.taskDelete;
+  if (index === undefined) return;
+  const tasks = todayTasks();
+  tasks.splice(Number(index), 1);
+  saveData();
+  renderTasks();
+});
 
-    const $ = (id) => document.getElementById(id);
+const dayNames = ["রবিবার", "সোমবার", "মঙ্গলবার", "বুধবার", "বৃহস্পতিবার", "শুক্রবার", "শনিবার"];
+const shortDays = ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহঃ", "শুক্র", "শনি"];
 
-    const days = [
-      { id: 1, name: "সোমবার", short: "সোম" },
-      { id: 2, name: "মঙ্গলবার", short: "মঙ্গল" },
-      { id: 3, name: "বুধবার", short: "বুধ" },
-      { id: 4, name: "বৃহস্পতিবার", short: "বৃহঃ" },
-      { id: 5, name: "শুক্রবার", short: "শুক্র" },
-      { id: 6, name: "শনিবার", short: "শনি" },
-      { id: 0, name: "রবিবার", short: "রবি" }
-    ];
+function renderDayTabs() {
+  $("dayTabs").innerHTML = shortDays.map((day, index) => `
+    <button type="button" class="day-tab ${selectedDay === index ? "active" : ""}"
+      data-day="${index}">${day}</button>
+  `).join("");
+  $("selectedDayTitle").textContent = `${dayNames[selectedDay]}-এর রুটিন`;
+}
 
-    function loadData(key, fallback) {
-      try {
-        const value = localStorage.getItem(key);
-        return value ? JSON.parse(value) : fallback;
-      } catch (error) {
-        return fallback;
-      }
-    }
+$("dayTabs").addEventListener("click", event => {
+  const button = event.target.closest("[data-day]");
+  if (!button) return;
+  selectedDay = Number(button.dataset.day);
+  renderDayTabs();
+  renderRoutines();
+});
 
-    let routines = loadData("sp_routines_v2", []);
-    let tasks = loadData("sp_tasks_v2", []);
-    let selectedDay = new Date().getDay();
+function renderRoutines() {
+  const routines = data.routines[selectedDay] || [];
+  if (!routines.length) {
+    $("routineList").innerHTML = '<div class="empty">এই দিনের জন্য কোনো রুটিন নেই। নিচে যোগ করো।</div>';
+    return;
+  }
+  $("routineList").innerHTML = routines.map((item, index) => `
+    <div class="routine-item">
+      <strong>${escapeHTML(item.time)}</strong>
+      <span>${escapeHTML(item.subject)}</span>
+      <button class="danger small" data-routine-delete="${index}">Delete</button>
+    </div>
+  `).join("");
+}
 
-    function saveData() {
-      try {
-        localStorage.setItem(
-          "sp_routines_v2",
-          JSON.stringify(routines)
-        );
+$("routineForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const time = $("routineTime").value.trim();
+  const subject = $("routineSubject").value.trim();
+  if (!time || !subject) return;
+  if (!data.routines[selectedDay]) data.routines[selectedDay] = [];
+  data.routines[selectedDay].push({ time, subject });
+  saveData();
+  $("routineTime").value = "";
+  $("routineSubject").value = "";
+  renderRoutines();
+});
 
-        localStorage.setItem(
-          "sp_tasks_v2",
-          JSON.stringify(tasks)
-        );
-      } catch (error) {
-        alert("ডেটা সেভ করা যায়নি। ব্রাউজারের স্টোরেজ সেটিংস পরীক্ষা করো।");
-      }
-    }
+$("routineList").addEventListener("click", event => {
+  const index = event.target.dataset.routineDelete;
+  if (index === undefined) return;
+  data.routines[selectedDay].splice(Number(index), 1);
+  saveData();
+  renderRoutines();
+});
 
-    function escapeHTML(value) {
-      return String(value).replace(/[&<>"']/g, function (char) {
-        return {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;"
-        }[char];
-      });
-    }
+$("saveGoal").addEventListener("click", () => {
+  const value = Number($("goalHours").value);
+  if (!Number.isFinite(value) || value < 0.5 || value > 24) {
+    alert("দৈনিক লক্ষ্য ০.৫ থেকে ২৪ ঘণ্টার মধ্যে দাও।");
+    return;
+  }
+  data.goalHours = value;
+  saveData();
+  updateDashboard();
+});
 
-    function dayName(id) {
-      return days.find(day => day.id === id)?.name || "";
-    }
+function renderTimer() {
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  $("timerDisplay").textContent =
+    `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  $("timerMode").textContent = timerMode === "focus"
+    ? "🎯 Focus Session" : "☕ Break Session";
+  $("timerHint").textContent = timerMode === "focus"
+    ? "২৫ মিনিট মন দিয়ে পড়ো।" : "৫ মিনিট বিশ্রাম নাও।";
+  $("startPause").textContent = running ? "⏸ Pause" : "▶ Start";
+  $("switchMode").textContent = timerMode === "focus"
+    ? "☕ Break Mode" : "🎯 Focus Mode";
+}
 
-    function formatTime(time) {
-      if (!time) return "";
+function stopTimer() {
+  running = false;
+  if (intervalId !== null) clearInterval(intervalId);
+  intervalId = null;
+  lastTickAt = 0;
+  carryMs = 0;
+  renderTimer();
+}
 
-      const parts = time.split(":").map(Number);
-      const hour = parts[0];
-      const minute = parts[1];
-      const suffix = hour >= 12 ? "PM" : "AM";
-      const displayHour = hour % 12 || 12;
+function startTimer() {
+  if (running) return;
+  running = true;
+  endAt = Date.now() + remaining * 1000;
+  lastTickAt = Date.now();
+  carryMs = 0;
+  intervalId = setInterval(tickTimer, 250);
+  renderTimer();
+}
 
-      return displayHour + ":" +
-        String(minute).padStart(2, "0") + " " + suffix;
-    }
-
-    // ===== Date =====
-
-    function renderDate() {
-      const now = new Date();
-
-      $("todayDate").textContent =
-        now.toLocaleDateString("bn-BD", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric"
-        });
-
-      $("routineDay").value = String(now.getDay());
-    }
-
-    // ===== Weekly Timetable =====
-
-    function renderDayTabs() {
-      $("dayTabs").innerHTML = days.map(day => `
-        <button
-          type="button"
-          class="${day.id === selectedDay ? "active" : ""}"
-          data-day="${day.id}"
-          aria-pressed="${day.id === selectedDay}"
-        >${day.short}</button>
-      `).join("");
-    }
-
-    function renderRoutines() {
-      const list = routines
-        .filter(item => item.day === selectedDay)
-        .sort((a, b) => a.start.localeCompare(b.start));
-
-      $("todayCount").textContent = routines.filter(
-        item => item.day === new Date().getDay()
-      ).length;
-
-      if (!list.length) {
-        $("routineList").innerHTML =
-          `<p class="empty">${dayName(selectedDay)}-এর কোনো রুটিন নেই। উপরের ফর্ম থেকে রুটিন যোগ করো।</p>`;
-        return;
-      }
-
-      $("routineList").innerHTML = list.map(item => `
-        <div class="entry">
-          <div class="entry-info">
-            <strong>${escapeHTML(item.subject)}</strong>
-            <small>${formatTime(item.start)} – ${formatTime(item.end)}</small>
-          </div>
-
-          <button
-            class="danger"
-            type="button"
-            data-delete-routine="${item.id}"
-            aria-label="রুটিন মুছুন"
-          >মুছুন</button>
-        </div>
-      `).join("");
-    }
-
-    $("dayTabs").addEventListener("click", function (event) {
-      const button = event.target.closest("[data-day]");
-      if (!button) return;
-
-      selectedDay = Number(button.dataset.day);
-
-      renderDayTabs();
-      renderRoutines();
-    });
-
-    $("routineForm").addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      const subject = $("subject").value.trim();
-      const day = Number($("routineDay").value);
-      const start = $("startTime").value;
-      const end = $("endTime").value;
-
-      if (!subject || !start || !end) return;
-
-      if (end <= start) {
-        alert("শেষের সময় শুরুর সময়ের পরে হতে হবে।");
-        return;
-      }
-
-      routines.push({
-        id: Date.now() + Math.random(),
-        subject: subject,
-        day: day,
-        start: start,
-        end: end
-      });
-
-      selectedDay = day;
-
+function tickTimer() {
+  const now = Date.now();
+  if (timerMode === "focus") {
+    carryMs += now - lastTickAt;
+    const wholeSeconds = Math.floor(carryMs / 1000);
+    if (wholeSeconds > 0) {
+      data.studySeconds[localDateKey()] =
+        todayStudySeconds() + wholeSeconds;
+      carryMs -= wholeSeconds * 1000;
       saveData();
-      renderDayTabs();
-      renderRoutines();
-
-      $("routineForm").reset();
-      $("routineDay").value = String(day);
-    });
-
-    $("routineList").addEventListener("click", function (event) {
-      const button = event.target.closest("[data-delete-routine]");
-      if (!button) return;
-
-      const id = Number(button.dataset.deleteRoutine);
-
-      routines = routines.filter(item => item.id !== id);
-
-      saveData();
-      renderRoutines();
-    });
-
-    // ===== Daily Tasks =====
-
-    function renderTasks() {
-      const done = tasks.filter(task => task.done).length;
-
-      $("taskCount").textContent = done + "/" + tasks.length;
-
-      $("taskList").innerHTML = tasks.length
-        ? tasks.map(task => `
-          <div class="task-row ${task.done ? "done" : ""}">
-            <input
-              type="checkbox"
-              data-toggle-task="${task.id}"
-              ${task.done ? "checked" : ""}
-              aria-label="${escapeHTML(task.text)} সম্পন্ন"
-            >
-
-            <span>${escapeHTML(task.text)}</span>
-
-            <button
-              class="danger"
-              type="button"
-              data-delete-task="${task.id}"
-              aria-label="কাজ মুছুন"
-            >×</button>
-          </div>
-        `).join("")
-        : `<p class="empty">এখনও কোনো কাজ যোগ করোনি।</p>`;
-
-      const percent = tasks.length
-        ? Math.round(done / tasks.length * 100)
-        : 0;
-
-      $("progressFill").style.width = percent + "%";
-      $("progressText").textContent = "আজকের অগ্রগতি: " + percent + "%";
+      updateDashboard();
     }
+  }
+  lastTickAt = now;
+  remaining = Math.max(0, Math.ceil((endAt - now) / 1000));
 
-    $("taskForm").addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      const text = $("taskInput").value.trim();
-      if (!text) return;
-
-      tasks.push({
-        id: Date.now() + Math.random(),
-        text: text,
-        done: false
-      });
-
+  if (remaining <= 0) {
+    stopTimer();
+    if (timerMode === "focus") {
+      timerMode = "break";
+      data.timerMode = timerMode;
+      remaining = durations.break;
       saveData();
-      renderTasks();
-      $("taskInput").value = "";
-    });
-
-    $("taskList").addEventListener("change", function (event) {
-      const input = event.target.closest("[data-toggle-task]");
-      if (!input) return;
-
-      const task = tasks.find(
-        item => item.id === Number(input.dataset.toggleTask)
-      );
-
-      if (task) {
-        task.done = input.checked;
-      }
-
-      saveData();
-      renderTasks();
-    });
-
-    $("taskList").addEventListener("click", function (event) {
-      const button = event.target.closest("[data-delete-task]");
-      if (!button) return;
-
-      const id = Number(button.dataset.deleteTask);
-
-      tasks = tasks.filter(item => item.id !== id);
-
-      saveData();
-      renderTasks();
-    });
-
-    // ===== Study Timer =====
-
-    (function () {
-      const display = $("timerDisplay");
-      const modeLabel = $("timerMode");
-      const status = $("timerStatus");
-      const startBtn = $("timerStart");
-      const pauseBtn = $("timerPause");
-      const resetBtn = $("timerReset");
-      const switchBtn = $("timerSwitch");
-
-      let mode = "study";
-      let remaining = 25 * 60;
-      let interval = null;
-      let endAt = 0;
-
-      function renderTimer() {
-        const minutes = Math.floor(remaining / 60);
-        const seconds = remaining % 60;
-
-        display.textContent =
-          String(minutes).padStart(2, "0") + ":" +
-          String(seconds).padStart(2, "0");
-
-        modeLabel.textContent = mode === "study"
-          ? "📚 Study Session — ২৫ মিনিট পড়া"
-          : "☕ Break Time — ৫ মিনিট বিরতি";
-
-        switchBtn.textContent = mode === "study"
-          ? "☕ Break: 5 min"
-          : "📚 Study: 25 min";
-      }
-
-      function stopTimer() {
-        if (interval !== null) {
-          clearInterval(interval);
-          interval = null;
-        }
-      }
-
-      function tick() {
-        remaining = Math.max(
-          0,
-          Math.ceil((endAt - Date.now()) / 1000)
-        );
-
-        renderTimer();
-
-        if (remaining <= 0) {
-          stopTimer();
-
-          status.textContent = mode === "study"
-            ? "পড়ার সময় শেষ! এবার বিরতি নাও।"
-            : "বিরতি শেষ! আবার পড়া শুরু করো।";
-
-          alert(mode === "study"
-            ? "২৫ মিনিট শেষ! এবার ৫ মিনিট বিরতি নাও।"
-            : "৫ মিনিটের বিরতি শেষ!");
-        }
-      }
-
-      startBtn.addEventListener("click", function () {
-        if (interval !== null) return;
-
-        if (remaining <= 0) {
-          status.textContent = "Reset অথবা নতুন সেশন নির্বাচন করো।";
-          return;
-        }
-
-        endAt = Date.now() + remaining * 1000;
-        status.textContent = "টাইমার চলছে — মন দিয়ে পড়ো!";
-
-        tick();
-
-        if (remaining > 0) {
-          interval = setInterval(tick, 250);
-        }
-      });
-
-      pauseBtn.addEventListener("click", function () {
-        if (interval === null) return;
-
-        remaining = Math.max(
-          0,
-          Math.ceil((endAt - Date.now()) / 1000)
-        );
-
-        stopTimer();
-        renderTimer();
-        status.textContent = "টাইমার থামানো হয়েছে।";
-      });
-
-      resetBtn.addEventListener("click", function () {
-        stopTimer();
-
-        remaining = mode === "study"
-          ? 25 * 60
-          : 5 * 60;
-
-        renderTimer();
-        status.textContent = "টাইমার রিসেট হয়েছে।";
-      });
-
-      switchBtn.addEventListener("click", function () {
-        stopTimer();
-
-        mode = mode === "study" ? "break" : "study";
-
-        remaining = mode === "study"
-          ? 25 * 60
-          : 5 * 60;
-
-        renderTimer();
-        status.textContent = "নতুন সেশন প্রস্তুত। Start চাপো।";
-      });
-
       renderTimer();
-    })();
+      alert("Focus session শেষ! এবার একটু বিরতি নাও।");
+    } else {
+      timerMode = "focus";
+      data.timerMode = timerMode;
+      remaining = durations.focus;
+      saveData();
+      renderTimer();
+      alert("বিরতি শেষ! আবার পড়া শুরু করতে পারো।");
+    }
+    return;
+  }
+  renderTimer();
+}
 
-    // ===== Start Website =====
+$("startPause").addEventListener("click", () => {
+  if (running) stopTimer();
+  else startTimer();
+});
 
-    renderDate();
-    renderDayTabs();
-    renderRoutines();
-    renderTasks();
-  </script>
+$("resetTimer").addEventListener("click", () => {
+  stopTimer();
+  remaining = durations[timerMode];
+  renderTimer();
+});
+
+$("switchMode").addEventListener("click", () => {
+  stopTimer();
+  timerMode = timerMode === "focus" ? "break" : "focus";
+  data.timerMode = timerMode;
+  remaining = durations[timerMode];
+  saveData();
+  renderTimer();
+});
+
+$("exportData").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "student-planner-backup.json";
+  link.click();
+  URL.revokeObjectURL(url);
+});
+
+function init() {
+  $("todayDate").textContent = new Date().toLocaleDateString("bn-BD", {
+    weekday: "long", year: "numeric", month: "long", day: "numeric"
+  });
+  $("goalHours").value = data.goalHours;
+  renderDayTabs();
+  renderTasks();
+  renderRoutines();
+  updateDashboard();
+  renderTimer();
+}
+
+init();
+</script>
 </body>
 </html>
+
