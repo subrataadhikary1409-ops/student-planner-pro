@@ -1,739 +1,361 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Student Planner Pro</title>
-
 <style>
-:root {
-  --bg: #f4f7fb;
-  --card: #ffffff;
-  --text: #172033;
-  --muted: #65718a;
-  --primary: #4f46e5;
-  --border: #e1e7f0;
-  --green: #16a34a;
-  --red: #dc2626;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-}
-header {
-  background: linear-gradient(135deg, #4338ca, #7c3aed);
-  color: white;
-  padding: 24px 16px;
-}
-.header-inner, main {
-  max-width: 1100px;
-  margin: auto;
-}
-header h1 { margin: 0 0 8px; }
-header p { margin: 0; opacity: .9; }
-main { padding: 18px 14px 40px; }
-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-nav a {
-  background: white;
-  color: var(--primary);
-  padding: 10px 13px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  text-decoration: none;
-  font-size: 14px;
-}
-section, .card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 18px;
-  margin-bottom: 18px;
-  box-shadow: 0 3px 12px #1e293b08;
-}
-h2 { margin-top: 0; font-size: 21px; }
-h3 { font-size: 17px; }
-.muted { color: var(--muted); }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 12px;
-}
-.stat {
-  padding: 16px;
-  background: #f8faff;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-.stat strong {
-  display: block;
-  font-size: 27px;
-  margin-top: 8px;
-  color: var(--primary);
-}
-input, select, textarea {
-  width: 100%;
-  padding: 11px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font: inherit;
-  background: white;
-  color: var(--text);
-  margin: 5px 0 10px;
-}
-button {
-  padding: 10px 14px;
-  border: 0;
-  border-radius: 8px;
-  background: var(--primary);
-  color: white;
-  font: inherit;
-  cursor: pointer;
-}
-button:hover { filter: brightness(.94); }
-button.secondary { background: #e8eaff; color: #3730a3; }
-button.danger { background: #fee2e2; color: #991b1b; }
-button.success { background: #dcfce7; color: #166534; }
-.row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.row > input, .row > select { flex: 1; min-width: 140px; }
-progress {
-  width: 100%;
-  height: 13px;
-  accent-color: var(--green);
-}
-.item {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 11px 0;
-  border-bottom: 1px solid var(--border);
-}
-.item:last-child { border-bottom: 0; }
-.item span { flex: 1; overflow-wrap: anywhere; }
-.item input[type="checkbox"] { width: auto; margin: 0; }
-.done { text-decoration: line-through; color: var(--muted); }
-.timer {
-  font-size: clamp(42px, 9vw, 66px);
-  text-align: center;
-  font-weight: 700;
-  margin: 20px 0;
-  color: var(--primary);
-}
-.center { text-align: center; }
-.day-card {
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin: 10px 0;
-}
-.chapter-meta {
-  font-size: 12px;
-  color: var(--muted);
-  display: block;
-  margin-top: 4px;
-}
-footer {
-  text-align: center;
-  color: var(--muted);
-  padding: 20px;
-}
-.small { font-size: 13px; }
-.notice {
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-  color: #854d0e;
-  padding: 12px;
-  border-radius: 10px;
-  line-height: 1.5;
-}
-.hidden { display: none; }
-@media (max-width: 520px) {
-  section, .card { padding: 14px; }
-  header { padding: 20px 14px; }
-}
+:root{--bg:#f3f6fc;--card:#fff;--text:#182238;--primary:#5145cd;--muted:#68758c;--border:#e0e6f0}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{padding:25px 16px;background:linear-gradient(135deg,#4338ca,#7c3aed);color:white}
+header,main,footer{padding-left:max(16px,calc((100% - 1050px)/2));padding-right:max(16px,calc((100% - 1050px)/2))}
+main{padding-top:18px;padding-bottom:35px}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+nav a{padding:10px;background:white;border:1px solid var(--border);border-radius:8px;color:var(--primary);text-decoration:none;font-size:14px}
+section{background:var(--card);padding:18px;margin-bottom:18px;border:1px solid var(--border);border-radius:14px;box-shadow:0 3px 12px #17203308}
+h2{font-size:21px;margin-top:0}
+h3{font-size:17px}
+.muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{background:#f8faff;padding:14px;border:1px solid var(--border);border-radius:10px}
+.stat strong{display:block;color:var(--primary);font-size:25px;margin:8px 0}
+input,select{width:100%;padding:11px;margin:5px 0 10px;border:1px solid #cbd5e1;border-radius:8px;background:white;font:inherit}
+button{padding:10px 14px;border:0;border-radius:8px;background:var(--primary);color:white;font:inherit;cursor:pointer}
+button.secondary{background:#e8eaff;color:#3730a3}
+button.danger{background:#fee2e2;color:#991b1b}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row input,.row select{flex:1;min-width:120px}
+.item{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.item span{flex:1;overflow-wrap:anywhere}
+.item input[type=checkbox]{width:auto;margin:0}
+.done{text-decoration:line-through;color:var(--muted)}
+progress{width:100%;height:13px;accent-color:#16a34a}
+.timer{font-size:clamp(45px,10vw,68px);font-weight:bold;color:var(--primary);margin:20px 0}
+.center{text-align:center}
+.day-card{padding:12px;border:1px solid var(--border);border-radius:9px;margin:10px 0}
+.notice{padding:12px;background:#fffbeb;border:1px solid #fde68a;border-radius:9px;color:#854d0e;line-height:1.5}
+footer{text-align:center;color:var(--muted);padding-top:12px;padding-bottom:25px}
+.small{font-size:13px}
 </style>
 </head>
-
 <body>
 <header>
-  <div class="header-inner">
-    <h1>📘 Student Planner Pro</h1>
-    <p>Your personal study planner • WBCHSE Class 12</p>
-  </div>
+<h1>📘 Student Planner Pro</h1>
+<p>Your personal study planner • WBCHSE Class 12</p>
 </header>
 
 <main>
 <nav>
-  <a href="#dashboard">Dashboard</a>
-  <a href="#timer">Study Timer</a>
-  <a href="#tasks">Daily Tasks</a>
-  <a href="#timetable">Timetable</a>
-  <a href="#syllabus">Chapter Tracker</a>
-  <a href="#backup">Backup</a>
+<a href="#dashboard">Dashboard</a>
+<a href="#timer">Study Timer</a>
+<a href="#tasks">Daily Tasks</a>
+<a href="#timetable">Timetable</a>
+<a href="#syllabus">Chapter Tracker</a>
+<a href="#backup">Backup</a>
 </nav>
 
 <section id="dashboard">
-  <h2>📊 Study Dashboard</h2>
-  <p class="muted" id="todayDate"></p>
-
-  <div class="grid">
-    <div class="stat">
-      Daily study goal
-      <strong><span id="goalDisplay">4</span> hrs</strong>
-    </div>
-    <div class="stat">
-      Tasks completed
-      <strong id="taskStat">0/0</strong>
-    </div>
-    <div class="stat">
-      Syllabus completed
-      <strong id="syllabusStat">0%</strong>
-    </div>
-    <div class="stat">
-      Chapter count
-      <strong id="chapterStat">0/0</strong>
-    </div>
-  </div>
-
-  <h3>Set your daily study goal</h3>
-  <div class="row">
-    <input type="number" id="dailyGoal" min="1" max="16" value="4">
-    <button id="saveGoal">Save Goal</button>
-  </div>
-
-  <h3>Overall syllabus progress</h3>
-  <progress id="overallProgress" value="0" max="100"></progress>
-  <p id="overallText" class="muted">0% completed</p>
+<h2>📊 Study Dashboard</h2>
+<p class="muted" id="todayDate"></p>
+<div class="grid">
+<div class="stat">Daily study goal<strong><span id="goalDisplay">4</span> hrs</strong></div>
+<div class="stat">Tasks completed<strong id="taskStat">0/0</strong></div>
+<div class="stat">Syllabus completed<strong id="syllabusStat">0%</strong></div>
+<div class="stat">Chapters completed<strong id="chapterStat">0/0</strong></div>
+</div>
+<h3>Set daily study goal</h3>
+<div class="row">
+<input id="dailyGoal" type="number" min="1" max="16" value="4">
+<button id="saveGoal">Save Goal</button>
+</div>
+<h3>Overall syllabus progress</h3>
+<progress id="overallProgress" value="0" max="100"></progress>
+<p id="overallText" class="muted">0% completed</p>
 </section>
 
 <section id="timer">
-  <h2>⏱️ Study Timer</h2>
-  <p class="muted">Focus for 25 minutes, then take a short break.</p>
-  <div class="center">
-    <label for="timerMode">Timer mode</label>
-    <select id="timerMode">
-      <option value="focus">Focus — 25 minutes</option>
-      <option value="break">Break — 5 minutes</option>
-    </select>
-    <div class="timer" id="timerDisplay">25:00</div>
-    <p id="timerStatus" class="muted">Ready to focus</p>
-    <div class="row" style="justify-content:center">
-      <button id="timerStart">Start</button>
-      <button class="secondary" id="timerPause">Pause</button>
-      <button class="danger" id="timerReset">Reset</button>
-    </div>
-  </div>
+<h2>⏱️ Study Timer</h2>
+<p class="muted">Focus for 25 minutes, then take a short break.</p>
+<div class="center">
+<label for="timerMode">Timer mode</label>
+<select id="timerMode">
+<option value="focus">Focus — 25 minutes</option>
+<option value="break">Break — 5 minutes</option>
+</select>
+<div class="timer" id="timerDisplay">25:00</div>
+<p id="timerStatus" class="muted">Ready to focus</p>
+<div class="row" style="justify-content:center">
+<button id="timerStart">Start</button>
+<button class="secondary" id="timerPause">Pause</button>
+<button class="secondary" id="timerReset">Reset</button>
+</div>
+</div>
 </section>
 
 <section id="tasks">
-  <h2>✅ Daily Tasks</h2>
-  <div class="row">
-    <input id="taskInput" placeholder="Enter a study task">
-    <button id="addTask">Add Task</button>
-  </div>
-  <div id="taskList"></div>
+<h2>✅ Daily Tasks</h2>
+<div class="row">
+<input id="taskInput" placeholder="Enter a study task">
+<button id="addTask">Add Task</button>
+</div>
+<div id="taskList"></div>
 </section>
 
 <section id="timetable">
-  <h2>🗓️ Weekly Timetable</h2>
-  <div class="row">
-    <select id="routineDay">
-      <option>Monday</option>
-      <option>Tuesday</option>
-      <option>Wednesday</option>
-      <option>Thursday</option>
-      <option>Friday</option>
-      <option>Saturday</option>
-      <option>Sunday</option>
-    </select>
-    <input id="routineTime" placeholder="Time (e.g. 6:00 PM)">
-    <input id="routineSubject" placeholder="Subject / activity">
-    <button id="addRoutine">Add Routine</button>
-  </div>
-  <div id="routineList"></div>
+<h2>🗓️ Weekly Timetable</h2>
+<div class="row">
+<select id="routineDay">
+<option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+<option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+</select>
+<input id="routineTime" placeholder="Time, e.g. 6 PM">
+<input id="routineSubject" placeholder="Subject / activity">
+<button id="addRoutine">Add</button>
+</div>
+<div id="routineList"></div>
 </section>
 
 <section id="syllabus">
-  <h2>📚 WBCHSE Class 12 Chapter Tracker</h2>
-  <p class="muted">Track your Semester III and Semester IV syllabus.</p>
-
-  <div class="notice small">
-    The subject lists below are a syllabus-planning starter based on the
-    published WBCHSE Class 12 topics. Please verify each semester's exact
-    chapter allocation against your current official subject PDF before
-    relying on it for exam preparation.
-    <br>
-    Official syllabus:
-    <a href="https://wbchse.wb.gov.in/student/curriculum-syllabus/"
-       target="_blank" rel="noopener">WBCHSE Curriculum & Syllabus</a>
-  </div>
-
-  <div class="grid" style="margin-top:14px">
-    <div>
-      <label for="subjectSelect">Subject</label>
-      <select id="subjectSelect">
-        <option value="Physics">Physics</option>
-        <option value="Chemistry">Chemistry</option>
-        <option value="Mathematics">Mathematics</option>
-        <option value="Biology">Biological Science</option>
-      </select>
-    </div>
-    <div>
-      <label for="semesterSelect">Semester</label>
-      <select id="semesterSelect">
-        <option value="III">Semester III</option>
-        <option value="IV">Semester IV</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="grid">
-    <div class="stat">
-      Selected subject progress
-      <strong id="subjectPercent">0%</strong>
-      <progress id="subjectProgress" value="0" max="100"></progress>
-    </div>
-    <div class="stat">
-      Selected semester
-      <strong id="semesterCount">0/0</strong>
-      <span class="muted small">Chapters completed</span>
-    </div>
-  </div>
-
-  <h3 id="chapterHeading">Physics — Semester III</h3>
-  <div id="chapterList"></div>
-
-  <details style="margin-top:16px">
-    <summary><strong>Add a custom chapter</strong></summary>
-    <p class="muted small">Use this if your official syllabus lists an additional topic.</p>
-    <input id="customChapter" placeholder="Custom chapter name">
-    <button id="addCustomChapter">Add Chapter</button>
-  </details>
+<h2>📚 WBCHSE Class 12 Chapter Tracker</h2>
+<p class="muted">Semester III and Semester IV</p>
+<div class="notice small">
+The chapter lists below are planning lists, not a verified official semester-wise allocation. Check your current WBCHSE syllabus before exam preparation.
+<a href="https://wbchse.wb.gov.in/student/curriculum-syllabus/" target="_blank" rel="noopener">Official WBCHSE syllabus</a>
+</div>
+<div class="grid" style="margin-top:14px">
+<div><label for="subjectSelect">Subject</label>
+<select id="subjectSelect">
+<option value="Physics">Physics</option>
+<option value="Chemistry">Chemistry</option>
+<option value="Mathematics">Mathematics</option>
+<option value="Biology">Biological Science</option>
+</select></div>
+<div><label for="semesterSelect">Semester</label>
+<select id="semesterSelect"><option value="III">Semester III</option><option value="IV">Semester IV</option></select></div>
+</div>
+<div class="grid">
+<div class="stat">Selected subject progress<strong id="subjectPercent">0%</strong><progress id="subjectProgress" value="0" max="100"></progress></div>
+<div class="stat">Chapters completed<strong id="semesterCount">0/0</strong></div>
+</div>
+<h3 id="chapterHeading">Physics — Semester III</h3>
+<div id="chapterList"></div>
+<h3>Add a custom chapter</h3>
+<input id="customChapter" placeholder="Enter chapter name">
+<button id="addCustomChapter">Add Chapter</button>
 </section>
 
 <section id="backup">
-  <h2>💾 Backup & Restore</h2>
-  <p class="muted">Download a backup of your planner data to your device.</p>
-  <div class="row">
-    <button id="exportData">Download Backup</button>
-    <label class="secondary" style="display:inline-block;padding:10px 14px;border-radius:8px;cursor:pointer">
-      Restore Backup
-      <input id="importData" type="file" accept=".json,application/json" hidden>
-    </label>
-  </div>
-  <p class="small muted">Keep your downloaded backup somewhere safe.</p>
+<h2>💾 Backup & Restore</h2>
+<p class="muted">Download a backup to save your planner data.</p>
+<div class="row">
+<button id="exportData">Download Backup</button>
+<label>Restore Backup
+<input id="importData" type="file" accept=".json,application/json">
+</label>
+</div>
 </section>
 </main>
-
 <footer>Student Planner Pro • Study consistently, one chapter at a time.</footer>
 
 <script>
-(() => {
+(function(){
 "use strict";
+const $=id=>document.getElementById(id);
+const KEYS={tasks:"spp_tasks_v2",routines:"spp_routines_v2",goal:"spp_goal_v2",chapters:"spp_chapters_v2"};
 
-const $ = id => document.getElementById(id);
-
-const KEYS = {
-  tasks: "studentPlannerPro_tasks_v1",
-  routines: "studentPlannerPro_routines_v1",
-  goal: "studentPlannerPro_goal_v1",
-  chapters: "studentPlannerPro_chapters_v1"
-};
-
-function load(key, fallback) {
-  try {
-    const value = JSON.parse(localStorage.getItem(key));
-    return value === null ? fallback : value;
-  } catch {
-    return fallback;
-  }
+function load(key,fallback){
+ try{const x=JSON.parse(localStorage.getItem(key));return x===null?fallback:x}
+ catch{return fallback}
 }
-function save(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-}
+function save(key,value){localStorage.setItem(key,JSON.stringify(value))}
 
-let tasks = load(KEYS.tasks, []);
-let routines = load(KEYS.routines, []);
-let goal = Number(load(KEYS.goal, 4)) || 4;
-let chapterState = load(KEYS.chapters, {});
+let tasks=load(KEYS.tasks,[]);
+let routines=load(KEYS.routines,[]);
+let goal=Number(load(KEYS.goal,4))||4;
+let chapterState=load(KEYS.chapters,{});
+if(!Array.isArray(tasks))tasks=[];
+if(!Array.isArray(routines))routines=[];
+if(!chapterState||typeof chapterState!=="object"||Array.isArray(chapterState))chapterState={};
 
-if (!Array.isArray(tasks)) tasks = [];
-if (!Array.isArray(routines)) routines = [];
-if (!chapterState || typeof chapterState !== "object" ||
-    Array.isArray(chapterState)) chapterState = {};
+const SYLLABUS={
+Physics:{
+III:["Electric Charges and Fields","Electrostatic Potential and Capacitance","Current Electricity","Moving Charges and Magnetism","Magnetism and Matter"],
+IV:["Electromagnetic Induction","Alternating Current","Electromagnetic Waves","Ray Optics and Optical Instruments","Wave Optics","Dual Nature of Radiation and Matter","Atoms","Nuclei","Semiconductor Electronics"]
+},
+Chemistry:{
+III:["Solutions","Electrochemistry","Chemical Kinetics","d- and f-Block Elements","Coordination Compounds"],
+IV:["Haloalkanes and Haloarenes","Alcohols, Phenols and Ethers","Aldehydes, Ketones and Carboxylic Acids","Amines","Biomolecules"]
+},
+Mathematics:{
+III:["Matrices","Determinants","Continuity and Differentiability","Applications of Derivatives","Integrals"],
+IV:["Applications of Integrals","Differential Equations","Vector Algebra","Three-Dimensional Geometry","Linear Programming","Probability"]
+},
+Biology:{
+III:["Sexual Reproduction in Flowering Plants","Human Reproduction","Reproductive Health","Principles of Inheritance and Variation","Molecular Basis of Inheritance"],
+IV:["Evolution","Human Health and Disease","Microbes in Human Welfare","Biotechnology: Principles and Processes","Biotechnology and its Applications","Organisms and Populations","Ecosystem","Biodiversity and Conservation"]
+}};
 
-/* Syllabus list.
-   Semester grouping is an initial planner arrangement.
-   Confirm exact grouping with your current WBCHSE subject PDFs. */
-const SYLLABUS = {
-  Physics: {
-    III: [
-      "Electric Charges and Fields",
-      "Electrostatic Potential and Capacitance",
-      "Current Electricity",
-      "Moving Charges and Magnetism",
-      "Magnetism and Matter"
-    ],
-    IV: [
-      "Electromagnetic Induction",
-      "Alternating Current",
-      "Electromagnetic Waves",
-      "Ray Optics and Optical Instruments",
-      "Wave Optics",
-      "Dual Nature of Radiation and Matter",
-      "Atoms",
-      "Nuclei",
-      "Semiconductor Electronics",
-      "Communication System"
-    ]
-  },
-  Chemistry: {
-    III: [
-      "Liquid State",
-      "p-Block Elements",
-      "Haloalkanes and Haloarenes",
-      "Alcohols, Phenols and Ethers",
-      "Biomolecules",
-      "Polymers"
-    ],
-    IV: [
-      "Electrochemistry",
-      "Chemical Kinetics",
-      "d- and f-Block Elements",
-      "Coordination Compounds",
-      "Aldehydes, Ketones and Carboxylic Acids",
-      "Organic Compounds Containing Nitrogen"
-    ]
-  },
-  Mathematics: {
-    III: [
-      "Relations and Functions",
-      "Inverse Trigonometric Functions",
-      "Matrices",
-      "Determinants",
-      "Continuity and Differentiability",
-      "Applications of Derivatives",
-      "Probability"
-    ],
-    IV: [
-      "Integrals",
-      "Applications of Integrals",
-      "Differential Equations",
-      "Vectors",
-      "Three-Dimensional Geometry",
-      "Linear Programming"
-    ]
-  },
-  Biology: {
-    III: [
-      "Sexual Reproduction in Flowering Plants",
-      "Human Reproduction",
-      "Reproductive Health",
-      "Principles of Inheritance and Variation",
-      "Molecular Basis of Inheritance",
-      "Evolution"
-    ],
-    IV: [
-      "Human Health and Disease",
-      "Improvement in Food Production",
-      "Microbes in Human Welfare",
-      "Biotechnology: Principles and Processes",
-      "Biotechnology and its Applications",
-      "Organisms and Populations",
-      "Ecosystem",
-      "Biodiversity and its Conservation",
-      "Environmental Issues"
-    ]
-  }
-};
+function chapterId(s,sem,name){return "default_"+s+"_"+sem+"_"+name.toLowerCase().replace(/[^a-z0-9]+/g,"_")}
+function isDone(id){return !!(chapterState[id]&&chapterState[id].done)}
+function setDone(id,done){chapterState[id]={...(chapterState[id]||{}),done};save(KEYS.chapters,chapterState)}
 
-/* Create a stable ID for each default chapter. */
-function chapterId(subject, semester, name) {
-  return "default_" + subject + "_" + semester + "_" +
-    name.toLowerCase().replace(/[^a-z0-9]+/g, "_");
-}
-
-function chapterDone(id) {
-  return Boolean(chapterState[id] && chapterState[id].done);
-}
-function setChapterDone(id, done) {
-  chapterState[id] = {
-    ...(chapterState[id] || {}),
-    done: done
-  };
-  save(KEYS.chapters, chapterState);
-}
-
-/* Dashboard */
-$("todayDate").textContent = new Date().toLocaleDateString(undefined, {
-  weekday: "long", year: "numeric", month: "long", day: "numeric"
-});
-$("dailyGoal").value = goal;
-$("goalDisplay").textContent = goal;
-
-$("saveGoal").addEventListener("click", () => {
-  const value = Number($("dailyGoal").value);
-  if (!Number.isFinite(value) || value < 1 || value > 16) {
-    alert("Please enter a daily goal between 1 and 16 hours.");
-    return;
-  }
-  goal = value;
-  save(KEYS.goal, goal);
-  $("goalDisplay").textContent = goal;
+$("todayDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+$("dailyGoal").value=goal;
+$("goalDisplay").textContent=goal;
+$("saveGoal").addEventListener("click",()=>{
+ const n=Number($("dailyGoal").value);
+ if(!Number.isFinite(n)||n<1||n>16)return alert("Enter a goal between 1 and 16 hours.");
+ goal=n;save(KEYS.goal,goal);$("goalDisplay").textContent=goal;
 });
 
-function updateDashboard() {
-  const completedTasks = tasks.filter(task => task.done).length;
-  $("taskStat").textContent = `${completedTasks}/${tasks.length}`;
-
-  const all = [];
-  for (const subject of Object.keys(SYLLABUS)) {
-    for (const semester of ["III", "IV"]) {
-      for (const name of SYLLABUS[subject][semester]) {
-        all.push(chapterId(subject, semester, name));
-      }
-    }
-  }
-
-  const customIds = Object.keys(chapterState).filter(id =>
-    id.startsWith("custom_")
-  );
-  const allIds = [...all, ...customIds];
-  const done = allIds.filter(chapterDone).length;
-  const percent = allIds.length ? Math.round(done / allIds.length * 100) : 0;
-
-  $("syllabusStat").textContent = percent + "%";
-  $("chapterStat").textContent = `${done}/${allIds.length}`;
-  $("overallProgress").value = percent;
-  $("overallText").textContent = `${percent}% completed (${done} of ${allIds.length} chapters)`;
+function updateDashboard(){
+ const all=[];
+ Object.keys(SYLLABUS).forEach(s=>["III","IV"].forEach(sem=>SYLLABUS[s][sem].forEach(n=>all.push(chapterId(s,sem,n)))));
+ const custom=Object.keys(chapterState).filter(id=>id.startsWith("custom_"));
+ const ids=[...all,...custom],done=ids.filter(isDone).length;
+ const pct=ids.length?Math.round(done/ids.length*100):0;
+ $("taskStat").textContent=tasks.filter(t=>t.done).length+"/"+tasks.length;
+ $("syllabusStat").textContent=pct+"%";
+ $("chapterStat").textContent=done+"/"+ids.length;
+ $("overallProgress").value=pct;
+ $("overallText").textContent=pct+"% completed ("+done+" of "+ids.length+" chapters)";
 }
 
-/* Daily tasks */
-function renderTasks() {
-  const list = $("taskList");
-  list.replaceChildren();
-
-  if (!tasks.length) {
-    list.textContent = "No tasks yet. Add your first study task above.";
-  }
-
-  tasks.forEach((task, index) => {
-    const row = document.createElement("div");
-    row.className = "item";
-
-    const check = document.createElement("input");
-    check.type = "checkbox";
-    check.checked = task.done;
-    check.setAttribute("aria-label", "Mark task completed");
-    check.addEventListener("change", () => {
-      task.done = check.checked;
-      save(KEYS.tasks, tasks);
-      renderTasks();
-      updateDashboard();
-    });
-
-    const text = document.createElement("span");
-    text.textContent = task.text;
-    if (task.done) text.className = "done";
-
-    const remove = document.createElement("button");
-    remove.className = "danger";
-    remove.textContent = "Delete";
-    remove.addEventListener("click", () => {
-      tasks.splice(index, 1);
-      save(KEYS.tasks, tasks);
-      renderTasks();
-      updateDashboard();
-    });
-
-    row.append(check, text, remove);
-    list.appendChild(row);
-  });
-
-  updateDashboard();
+function renderTasks(){
+ const list=$("taskList");list.replaceChildren();
+ if(!tasks.length)list.textContent="No tasks yet. Add your first task.";
+ tasks.forEach((t,i)=>{
+  const row=document.createElement("div");row.className="item";
+  const cb=document.createElement("input");cb.type="checkbox";cb.checked=!!t.done;
+  cb.addEventListener("change",()=>{t.done=cb.checked;save(KEYS.tasks,tasks);renderTasks()});
+  const span=document.createElement("span");span.textContent=t.text;if(t.done)span.className="done";
+  const del=document.createElement("button");del.className="danger";del.textContent="Delete";
+  del.addEventListener("click",()=>{tasks.splice(i,1);save(KEYS.tasks,tasks);renderTasks()});
+  row.append(cb,span,del);list.append(row);
+ });
+ updateDashboard();
 }
-
-$("addTask").addEventListener("click", () => {
-  const text = $("taskInput").value.trim();
-  if (!text) return alert("Please enter a task.");
-  tasks.push({ text, done: false });
-  save(KEYS.tasks, tasks);
-  $("taskInput").value = "";
-  renderTasks();
+$("addTask").addEventListener("click",()=>{
+ const text=$("taskInput").value.trim();if(!text)return alert("Enter a task.");
+ tasks.push({text,done:false});save(KEYS.tasks,tasks);$("taskInput").value="";renderTasks();
 });
-$("taskInput").addEventListener("keydown", event => {
-  if (event.key === "Enter") $("addTask").click();
+$("taskInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("addTask").click()});
+
+function renderRoutines(){
+ const list=$("routineList");list.replaceChildren();
+ const days=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+ days.forEach(day=>{
+  const entries=routines.filter(r=>r.day===day);if(!entries.length)return;
+  const card=document.createElement("div");card.className="day-card";
+  const h=document.createElement("h3");h.textContent=day;card.append(h);
+  entries.forEach(entry=>{
+   const i=routines.indexOf(entry),row=document.createElement("div");row.className="item";
+   const span=document.createElement("span");span.textContent=entry.time+" — "+entry.subject;
+   const del=document.createElement("button");del.className="danger";del.textContent="Delete";
+   del.addEventListener("click",()=>{routines.splice(i,1);save(KEYS.routines,routines);renderRoutines()});
+   row.append(span,del);card.append(row);
+  });list.append(card);
+ });
+ if(!routines.length)list.textContent="No routines added yet.";
+}
+$("addRoutine").addEventListener("click",()=>{
+ const day=$("routineDay").value,time=$("routineTime").value.trim(),subject=$("routineSubject").value.trim();
+ if(!time||!subject)return alert("Enter both time and subject.");
+ routines.push({day,time,subject});save(KEYS.routines,routines);
+ $("routineTime").value="";$("routineSubject").value="";renderRoutines();
 });
 
-/* Weekly timetable */
-function renderRoutines() {
-  const list = $("routineList");
-  list.replaceChildren();
-
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday",
-                "Friday", "Saturday", "Sunday"];
-
-  days.forEach(day => {
-    const dayItems = routines.filter(item => item.day === day);
-    if (!dayItems.length) return;
-
-    const card = document.createElement("div");
-    card.className = "day-card";
-    const heading = document.createElement("h3");
-    heading.textContent = day;
-    card.appendChild(heading);
-
-    dayItems.forEach(item => {
-      const index = routines.indexOf(item);
-      const row = document.createElement("div");
-      row.className = "item";
-
-      const text = document.createElement("span");
-      text.textContent = `${item.time} — ${item.subject}`;
-
-      const remove = document.createElement("button");
-      remove.className = "danger";
-      remove.textContent = "Delete";
-      remove.addEventListener("click", () => {
-        routines.splice(index, 1);
-        save(KEYS.routines, routines);
-        renderRoutines();
-      });
-
-      row.append(text, remove);
-      card.appendChild(row);
-    });
-
-    list.appendChild(card);
-  });
-
-  if (!routines.length) {
-    list.textContent = "No routines yet. Add a routine above.";
-  }
+function renderChapters(){
+ const subject=$("subjectSelect").value,sem=$("semesterSelect").value,list=$("chapterList");
+ list.replaceChildren();$("chapterHeading").textContent=subject+" — Semester "+sem;
+ const entries=SYLLABUS[subject][sem].map(name=>({id:chapterId(subject,sem,name),name,custom:false}));
+ Object.keys(chapterState).filter(id=>id.startsWith("custom_"+subject+"_"+sem+"_")).forEach(id=>entries.push({id,name:chapterState[id].name,custom:true}));
+ const done=entries.filter(c=>isDone(c.id)).length,pct=entries.length?Math.round(done/entries.length*100):0;
+ $("subjectPercent").textContent=pct+"%";$("subjectProgress").value=pct;$("semesterCount").textContent=done+"/"+entries.length;
+ entries.forEach(ch=>{
+  const row=document.createElement("div");row.className="item";
+  const cb=document.createElement("input");cb.type="checkbox";cb.checked=isDone(ch.id);
+  const span=document.createElement("span");span.textContent=ch.name;if(isDone(ch.id))span.className="done";
+  cb.addEventListener("change",()=>{setDone(ch.id,cb.checked);renderChapters()});
+  row.append(cb,span);
+  if(ch.custom){const del=document.createElement("button");del.className="danger";del.textContent="Delete";del.addEventListener("click",()=>{delete chapterState[ch.id];save(KEYS.chapters,chapterState);renderChapters()});row.append(del)}
+  list.append(row);
+ });
+ updateDashboard();
 }
+$("subjectSelect").addEventListener("change",renderChapters);
+$("semesterSelect").addEventListener("change",renderChapters);
+$("addCustomChapter").addEventListener("click",()=>{
+ const name=$("customChapter").value.trim();if(!name)return alert("Enter a chapter name.");
+ const id="custom_"+$("subjectSelect").value+"_"+$("semesterSelect").value+"_"+Date.now();
+ chapterState[id]={name,done:false};save(KEYS.chapters,chapterState);$("customChapter").value="";renderChapters();
+});
+$("customChapter").addEventListener("keydown",e=>{if(e.key==="Enter")$("addCustomChapter").click()});
 
-$("addRoutine").addEventListener("click", () => {
-  const day = $("routineDay").value;
-  const time = $("routineTime").value.trim();
-  const subject = $("routineSubject").value.trim();
+/* Reliable timer: uses an end timestamp so it does not drift. */
+let timerInterval=null,timerRunning=false,endAt=0,remainingMs=25*60*1000;
+function durationMs(){return ($("timerMode").value==="focus"?25:5)*60*1000}
+function showTimer(){
+ const seconds=Math.max(0,Math.ceil(remainingMs/1000));
+ $("timerDisplay").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");
+}
+function stopTimer(){if(timerInterval!==null)clearInterval(timerInterval);timerInterval=null;timerRunning=false}
+function tick(){
+ remainingMs=Math.max(0,endAt-Date.now());showTimer();
+ if(remainingMs<=0){
+  stopTimer();$("timerStatus").textContent="Session complete!";
+  alert("Timer finished! Well done.");
+ }
+}
+$("timerMode").addEventListener("change",()=>{
+ stopTimer();remainingMs=durationMs();showTimer();$("timerStatus").textContent="Ready to focus";
+});
+$("timerStart").addEventListener("click",()=>{
+ if(timerRunning)return;
+ if(remainingMs<=0)remainingMs=durationMs();
+ endAt=Date.now()+remainingMs;timerRunning=true;
+ $("timerStatus").textContent="Timer running…";
+ tick();if(!timerRunning)return;
+ timerInterval=setInterval(tick,250);
+});
+$("timerPause").addEventListener("click",()=>{
+ if(timerRunning){remainingMs=Math.max(0,endAt-Date.now());stopTimer();showTimer()}
+ $("timerStatus").textContent="Paused";
+});
+$("timerReset").addEventListener("click",()=>{
+ stopTimer();remainingMs=durationMs();showTimer();$("timerStatus").textContent="Ready to focus";
+});
+showTimer();
 
-  if (!time || !subject) {
-    return alert("Please enter both time and subject.");
-  }
-
-  routines.push({ day, time, subject });
-  save(KEYS.routines, routines);
-  $("routineTime").value = "";
-  $("routineSubject").value = "";
-  renderRoutines();
+/* Backup and restore */
+$("exportData").addEventListener("click",()=>{
+ const data={app:"Student Planner Pro",version:2,tasks,routines,goal,chapterState};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="student-planner-backup.json";a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+$("importData").addEventListener("change",async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{
+  const data=JSON.parse(await file.text());
+  if(!data||typeof data!=="object")throw new Error("Invalid backup");
+  if(!confirm("Restore backup? Current planner data will be replaced."))return;
+  tasks=Array.isArray(data.tasks)?data.tasks:[];
+  routines=Array.isArray(data.routines)?data.routines:[];
+  goal=Number(data.goal)>=1&&Number(data.goal)<=16?Number(data.goal):4;
+  chapterState=data.chapterState&&typeof data.chapterState==="object"?data.chapterState:{};
+  save(KEYS.tasks,tasks);save(KEYS.routines,routines);save(KEYS.goal,goal);save(KEYS.chapters,chapterState);
+  $("dailyGoal").value=goal;$("goalDisplay").textContent=goal;
+  renderTasks();renderRoutines();renderChapters();alert("Backup restored.");
+ }catch{alert("Invalid backup file.")}
+ e.target.value="";
 });
 
-/* Chapter tracker */
-function renderChapters() {
-  const subject = $("subjectSelect").value;
-  const semester = $("semesterSelect").value;
-  const list = $("chapterList");
-  const heading = $("chapterHeading");
-  list.replaceChildren();
+renderTasks();renderRoutines();renderChapters();updateDashboard();
+})();
+</script>
+</body>
+</html>
 
-  heading.textContent = `${subject} — Semester ${semester}`;
-
-  const defaults = SYLLABUS[subject][semester].map(name => ({
-    id: chapterId(subject, semester, name),
-    name,
-    custom: false
-  }));
-
-  const custom = Object.keys(chapterState)
-    .filter(id => id.startsWith("custom_" + subject + "_" + semester + "_"))
-    .map(id => ({
-      id,
-      name: chapterState[id].name || "Custom chapter",
-      custom: true
-    }));
-
-  const chapters = [...defaults, ...custom];
-  const completed = chapters.filter(ch => chapterDone(ch.id)).length;
-  const percent = chapters.length
-    ? Math.round(completed / chapters.length * 100)
-    : 0;
-
-  $("subjectPercent").textContent = percent + "%";
-  $("subjectProgress").value = percent;
-  $("semesterCount").textContent = `${completed}/${chapters.length}`;
-
-  chapters.forEach(chapter => {
-    const row = document.createElement("div");
-    row.className = "item";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = chapterDone(chapter.id);
-    checkbox.setAttribute("aria-label", "Mark chapter completed");
-
-    const textWrap = document.createElement("span");
-    const name = document.createElement("span");
-    name.textContent = chapter.name;
-    if (chapterDone(chapter.id)) name.className = "done";
-    textWrap.appendChild(name);
-
-    if (chapter.custom) {
-      const meta = document.createElement("small");
-      meta.className = "chapter-meta";
-      meta.textContent = "Custom chapter";
-      textWrap.appendChild(meta);
-    }
-
-    checkbox.addEventListener("change", () => {
-      setChapterDone(chapter.id, checkbox.checked);
-      renderChapters();
-      updateDashboard();
-    });
-
-    row.append(checkbox, textWrap);
-
-    if (chapter.custom) {
-      const remove = document.createElement("button");
-      remove.className = "danger";
-      remove.textContent = "Delete";
-      remove.addEventListener("click", () => {
-        delete chapterState[chapter.id];
-        save(KEYS.chapters, chapterState);
-        renderChapters();
-        updateDashboard();
-      });
-      row.appendChild(remove);
-    }
-
-    list.appendChild(row);
-  });
-
-  updateDashboard();
-}
-
-$("subjectSelect").addEventListener("change", renderChapters);
-$("semesterSelect").addEventListener("change", renderChapters);
-
-$("addCustomChapter").addEventListener("click", () => {
-  const name = $("customChapter").value.trim();
-  if (!name) return alert("Please enter a chapter name.");
-
-  const subject = $("subjectSelect").value;
-  const semester = $("semesterSelect").value;
-  const id = "custom_" + subject + "_" + semester + "_" + Date.now();
-
-  chapterState[id] = { name, done: false };
-  save(KEYS.chapters, chapter
