@@ -1,126 +1,448 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2459d3">
   <title>Student Planner Pro</title>
   <style>
+    :root {
+      --blue: #2459d3;
+      --light: #edf3ff;
+      --text: #17243b;
+      --muted: #68758a;
+      --border: #e2e8f2;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f5ff;
-      color: #173568;
       margin: 0;
-      padding: 20px;
+      background: #f4f7fc;
+      color: var(--text);
+      font-family: Arial, "Noto Sans Bengali", sans-serif;
     }
+
     header {
-      background: #1769e0;
+      background: linear-gradient(135deg, #2459d3, #5487f4);
       color: white;
-      padding: 22px;
-      border-radius: 18px;
-      text-align: center;
+      padding: 24px 18px;
     }
-    .card {
-      background: white;
-      padding: 18px;
-      margin-top: 16px;
-      border-radius: 14px;
-      box-shadow: 0 3px 12px #0001;
+
+    .header-inner, main {
+      width: min(100% - 28px, 900px);
+      margin: auto;
     }
-    input, button {
-      padding: 12px;
+
+    header h1 { margin: 0 0 8px; font-size: 26px; }
+    header p { margin: 0; opacity: .92; }
+    main { padding: 20px 0 40px; }
+
+    .date-line { color: var(--muted); margin: 0 0 18px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat, .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 17px;
+      box-shadow: 0 3px 12px #142d5708;
+    }
+
+    .stat small { color: var(--muted); }
+    .stat strong { display: block; margin-top: 8px; font-size: 24px; }
+
+    .panel { margin-bottom: 18px; }
+    h2 { font-size: 19px; margin: 0 0 15px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    label { display: block; font-size: 14px; font-weight: 600; }
+
+    input, select, textarea {
+      width: 100%;
+      margin-top: 7px;
+      padding: 11px;
+      border: 1px solid #d5deed;
       border-radius: 9px;
-      border: 1px solid #ccd8ee;
-      font-size: 16px;
-      margin-top: 8px;
+      background: white;
+      color: var(--text);
+      font: inherit;
+      min-width: 0;
     }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid #b7ccff;
+      border-color: var(--blue);
+    }
+
     button {
-      background: #1769e0;
-      color: white;
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 14px;
+      font: inherit;
+      font-weight: 600;
       cursor: pointer;
     }
-    li { margin: 12px 0; }
+
+    .primary { background: var(--blue); color: white; }
+    .secondary { background: var(--light); color: var(--blue); }
+    .danger { background: #fff0f0; color: #b42323; }
+    .form-actions { margin-top: 14px; }
+
+    .day-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 0 12px;
+    }
+
+    .day-tabs button { white-space: nowrap; background: #edf1f8; }
+    .day-tabs button.active { background: var(--blue); color: white; }
+
+    .entry {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .entry:last-child { border-bottom: 0; }
+    .entry-info { flex: 1; min-width: 0; }
+    .entry-info strong { display: block; overflow-wrap: anywhere; }
+    .entry-info small { color: var(--muted); display: block; margin-top: 5px; }
+    .entry button { padding: 8px 10px; }
+    .empty { color: var(--muted); padding: 12px 0; line-height: 1.6; }
+
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .task-row input { width: 18px; margin: 0; }
+    .task-row span { flex: 1; overflow-wrap: anywhere; }
+    .task-row.done span { text-decoration: line-through; color: var(--muted); }
+
+    .task-add { display: flex; gap: 8px; margin-top: 12px; }
+    .task-add input { flex: 1; min-width: 0; }
+    .progress-track {
+      background: #e6edfa;
+      height: 9px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: var(--blue);
+      transition: width .2s;
+    }
+
+    footer { text-align: center; color: var(--muted); font-size: 13px; padding: 10px; }
+
+    @media (max-width: 520px) {
+      .form-grid { grid-template-columns: 1fr; }
+      header h1 { font-size: 23px; }
+      .stat, .panel { padding: 14px; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>📘 Student Planner Pro</h1>
-    <p>তোমার পড়াশোনা, তোমার পরিকল্পনা!</p>
+    <div class="header-inner">
+      <h1>📘 Student Planner Pro</h1>
+      <p>তোমার পড়াশোনা, তোমার পরিকল্পনা | Plan. Study. Progress.</p>
+    </div>
   </header>
 
-  <div class="card">
-    <h2>📅 আজকের পড়াশোনা</h2>
-    <p id="date"></p>
-    <input id="task" placeholder="আজ কী পড়বে?">
-    <button onclick="addTask()">কাজ যোগ করো</button>
-    <ul id="tasks"></ul>
-  </div>
+  <main>
+    <p class="date-line" id="todayDate"></p>
 
-  <div class="card">
-    <h2>🎯 আমার লক্ষ্য</h2>
-    <p>প্রতিদিন একটু একটু করে এগিয়ে চলো!</p>
-    <input id="goal" placeholder="আজকের পড়ার লক্ষ্য">
-    <button onclick="saveGoal()">লক্ষ্য সেভ করো</button>
-    <p id="savedGoal"></p>
-  </div>
+    <div class="stats">
+      <div class="stat">
+        <small>আজকের রুটিন / Today's Classes</small>
+        <strong id="todayCount">0</strong>
+      </div>
+      <div class="stat">
+        <small>আজকের কাজ সম্পন্ন / Tasks Done</small>
+        <strong id="taskCount">0/0</strong>
+      </div>
+    </div>
+
+    <section class="panel">
+      <h2>📅 Daily Timetable — রুটিন তৈরি করো</h2>
+      <form id="routineForm">
+        <div class="form-grid">
+          <label>
+            বিষয় / Subject
+            <input id="subject" type="text" maxlength="80"
+              placeholder="যেমন: Physics / পদার্থবিদ্যা" required>
+          </label>
+
+          <label>
+            দিন / Day
+            <select id="routineDay" required>
+              <option value="1">সোমবার / Monday</option>
+              <option value="2">মঙ্গলবার / Tuesday</option>
+              <option value="3">বুধবার / Wednesday</option>
+              <option value="4">বৃহস্পতিবার / Thursday</option>
+              <option value="5">শুক্রবার / Friday</option>
+              <option value="6">শনিবার / Saturday</option>
+              <option value="0">রবিবার / Sunday</option>
+            </select>
+          </label>
+
+          <label>
+            শুরুর সময় / Start
+            <input id="startTime" type="time" required>
+          </label>
+
+          <label>
+            শেষের সময় / End
+            <input id="endTime" type="time" required>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button class="primary" type="submit">＋ রুটিন যোগ করো</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>🗓️ তোমার সাপ্তাহিক রুটিন / Weekly Timetable</h2>
+      <div class="day-tabs" id="dayTabs"></div>
+      <div id="routineList" aria-live="polite"></div>
+    </section>
+
+    <section class="panel">
+      <h2>✅ Daily Tasks — আজকের পড়ার কাজ</h2>
+      <form id="taskForm" class="task-add">
+        <input id="taskInput" type="text" maxlength="160"
+          placeholder="যেমন: Physics Chapter 1 revision" required>
+        <button class="primary" type="submit">যোগ</button>
+      </form>
+      <div id="taskList" aria-live="polite"></div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <small id="progressText" class="empty"></small>
+    </section>
+
+    <footer>Student Planner Pro • Your study journey starts here.</footer>
+  </main>
 
   <script>
-    document.getElementById("date").textContent =
-      new Date().toLocaleDateString("bn-BD");
+    const $ = (id) => document.getElementById(id);
+    const days = [
+      { id: 1, name: "সোমবার", short: "সোম" },
+      { id: 2, name: "মঙ্গলবার", short: "মঙ্গল" },
+      { id: 3, name: "বুধবার", short: "বুধ" },
+      { id: 4, name: "বৃহস্পতিবার", short: "বৃহঃ" },
+      { id: 5, name: "শুক্রবার", short: "শুক্র" },
+      { id: 6, name: "শনিবার", short: "শনি" },
+      { id: 0, name: "রবিবার", short: "রবি" }
+    ];
 
-    let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-
-    function renderTasks() {
-      const list = document.getElementById("tasks");
-      list.innerHTML = "";
-
-      tasks.forEach((task, index) => {
-        const li = document.createElement("li");
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = task.done;
-
-        checkbox.onchange = () => {
-          tasks[index].done = checkbox.checked;
-          localStorage.setItem("tasks", JSON.stringify(tasks));
-          renderTasks();
-        };
-
-        li.appendChild(checkbox);
-        li.appendChild(document.createTextNode(" " + task.name));
-        list.appendChild(li);
-      });
+    function loadData(key, fallback) {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+      } catch (error) {
+        return fallback;
+      }
     }
 
-    function addTask() {
-      const input = document.getElementById("task");
-      if (!input.value.trim()) {
-        alert("আগে পড়ার কাজটি লেখো!");
+    let routines = loadData("sp_routines_v2", []);
+    let tasks = loadData("sp_tasks_v2", []);
+    let selectedDay = new Date().getDay();
+
+    function saveData() {
+      try {
+        localStorage.setItem("sp_routines_v2", JSON.stringify(routines));
+        localStorage.setItem("sp_tasks_v2", JSON.stringify(tasks));
+      } catch (error) {
+        alert("ডেটা সেভ করা যায়নি। ব্রাউজারের স্টোরেজ সেটিংস পরীক্ষা করো।");
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function dayName(id) {
+      return days.find(day => day.id === id)?.name || "";
+    }
+
+    function formatTime(time) {
+      if (!time) return "";
+      const [hour, minute] = time.split(":").map(Number);
+      const suffix = hour >= 12 ? "PM" : "AM";
+      const displayHour = hour % 12 || 12;
+      return `${displayHour}:${String(minute).padStart(2, "0")} ${suffix}`;
+    }
+
+    function renderDate() {
+      const now = new Date();
+      $("todayDate").textContent = now.toLocaleDateString("bn-BD", {
+        weekday: "long", year: "numeric", month: "long", day: "numeric"
+      });
+      $("routineDay").value = String(now.getDay());
+    }
+
+    function renderDayTabs() {
+      $("dayTabs").innerHTML = days.map(day => `
+        <button type="button"
+          class="${day.id === selectedDay ? "active" : ""}"
+          data-day="${day.id}"
+          aria-pressed="${day.id === selectedDay}">
+          ${day.short}
+        </button>
+      `).join("");
+    }
+
+    function renderRoutines() {
+      const list = routines
+        .filter(item => item.day === selectedDay)
+        .sort((a, b) => a.start.localeCompare(b.start));
+
+      $("todayCount").textContent = routines.filter(
+        item => item.day === new Date().getDay()
+      ).length;
+
+      if (!list.length) {
+        $("routineList").innerHTML =
+          `<p class="empty">${dayName(selectedDay)}-এর কোনো রুটিন নেই। উপরের ফর্ম থেকে রুটিন যোগ করো।</p>`;
         return;
       }
 
-      tasks.push({ name: input.value.trim(), done: false });
-      localStorage.setItem("tasks", JSON.stringify(tasks));
-      input.value = "";
+      $("routineList").innerHTML = list.map(item => `
+        <div class="entry">
+          <div class="entry-info">
+            <strong>${escapeHTML(item.subject)}</strong>
+            <small>${formatTime(item.start)} – ${formatTime(item.end)}</small>
+          </div>
+          <button class="danger" type="button" data-delete-routine="${item.id}"
+            aria-label="রুটিন মুছুন">মুছুন</button>
+        </div>
+      `).join("");
+    }
+
+    function renderTasks() {
+      const done = tasks.filter(task => task.done).length;
+      $("taskCount").textContent = `${done}/${tasks.length}`;
+
+      $("taskList").innerHTML = tasks.length ? tasks.map(task => `
+        <div class="task-row ${task.done ? "done" : ""}">
+          <input type="checkbox" data-toggle-task="${task.id}"
+            ${task.done ? "checked" : ""}
+            aria-label="${escapeHTML(task.text)} সম্পন্ন">
+          <span>${escapeHTML(task.text)}</span>
+          <button class="danger" type="button" data-delete-task="${task.id}"
+            aria-label="কাজ মুছুন">×</button>
+        </div>
+      `).join("") : `<p class="empty">এখনও কোনো কাজ যোগ করোনি।</p>`;
+
+      const percent = tasks.length ? Math.round(done / tasks.length * 100) : 0;
+      $("progressFill").style.width = percent + "%";
+      $("progressText").textContent = `আজকের অগ্রগতি: ${percent}%`;
+    }
+
+    $("dayTabs").addEventListener("click", event => {
+      const button = event.target.closest("[data-day]");
+      if (!button) return;
+      selectedDay = Number(button.dataset.day);
+      renderDayTabs();
+      renderRoutines();
+    });
+
+    $("routineForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const subject = $("subject").value.trim();
+      const day = Number($("routineDay").value);
+      const start = $("startTime").value;
+      const end = $("endTime").value;
+
+      if (!subject || !start || !end) return;
+      if (end <= start) {
+        alert("শেষের সময় শুরুর সময়ের পরে হতে হবে।");
+        return;
+      }
+
+      routines.push({
+        id: Date.now() + Math.random(),
+        subject, day, start, end
+      });
+
+      selectedDay = day;
+      saveData();
+      renderDayTabs();
+      renderRoutines();
+      $("routineForm").reset();
+      $("routineDay").value = String(day);
+    });
+
+    $("routineList").addEventListener("click", event => {
+      const button = event.target.closest("[data-delete-routine]");
+      if (!button) return;
+      routines = routines.filter(item => item.id !== Number(button.dataset.deleteRoutine));
+      saveData();
+      renderRoutines();
+    });
+
+    $("taskForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const text = $("taskInput").value.trim();
+      if (!text) return;
+      tasks.push({ id: Date.now() + Math.random(), text, done: false });
+      saveData();
       renderTasks();
-    }
+      $("taskInput").value = "";
+    });
 
-    function saveGoal() {
-      const goal = document.getElementById("goal").value.trim();
-      localStorage.setItem("studyGoal", goal);
-      document.getElementById("savedGoal").textContent =
-        "তোমার লক্ষ্য: " + goal;
-    }
+    $("taskList").addEventListener("change", event => {
+      const input = event.target.closest("[data-toggle-task]");
+      if (!input) return;
+      const task = tasks.find(item => item.id === Number(input.dataset.toggleTask));
+      if (task) task.done = input.checked;
+      saveData();
+      renderTasks();
+    });
 
-    document.getElementById("goal").value =
-      localStorage.getItem("studyGoal") || "";
+    $("taskList").addEventListener("click", event => {
+      const button = event.target.closest("[data-delete-task]");
+      if (!button) return;
+      tasks = tasks.filter(item => item.id !== Number(button.dataset.deleteTask));
+      saveData();
+      renderTasks();
+    });
 
-    document.getElementById("savedGoal").textContent =
-      localStorage.getItem("studyGoal")
-        ? "তোমার লক্ষ্য: " + localStorage.getItem("studyGoal")
-        : "";
-
+    renderDate();
+    renderDayTabs();
+    renderRoutines();
     renderTasks();
   </script>
 </body>
 </html>
-
