@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Planner Pro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f5ff;
+      color: #173568;
+      margin: 0;
+      padding: 20px;
+    }
+    header {
+      background: #1769e0;
+      color: white;
+      padding: 22px;
+      border-radius: 18px;
+      text-align: center;
+    }
+    .card {
+      background: white;
+      padding: 18px;
+      margin-top: 16px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px #0001;
+    }
+    input, button {
+      padding: 12px;
+      border-radius: 9px;
+      border: 1px solid #ccd8ee;
+      font-size: 16px;
+      margin-top: 8px;
+    }
+    button {
+      background: #1769e0;
+      color: white;
+      cursor: pointer;
+    }
+    li { margin: 12px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📘 Student Planner Pro</h1>
+    <p>তোমার পড়াশোনা, তোমার পরিকল্পনা!</p>
+  </header>
+
+  <div class="card">
+    <h2>📅 আজকের পড়াশোনা</h2>
+    <p id="date"></p>
+    <input id="task" placeholder="আজ কী পড়বে?">
+    <button onclick="addTask()">কাজ যোগ করো</button>
+    <ul id="tasks"></ul>
+  </div>
+
+  <div class="card">
+    <h2>🎯 আমার লক্ষ্য</h2>
+    <p>প্রতিদিন একটু একটু করে এগিয়ে চলো!</p>
+    <input id="goal" placeholder="আজকের পড়ার লক্ষ্য">
+    <button onclick="saveGoal()">লক্ষ্য সেভ করো</button>
+    <p id="savedGoal"></p>
+  </div>
+
+  <script>
+    document.getElementById("date").textContent =
+      new Date().toLocaleDateString("bn-BD");
+
+    let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    function renderTasks() {
+      const list = document.getElementById("tasks");
+      list.innerHTML = "";
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.done;
+
+        checkbox.onchange = () => {
+          tasks[index].done = checkbox.checked;
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+          renderTasks();
+        };
+
+        li.appendChild(checkbox);
+        li.appendChild(document.createTextNode(" " + task.name));
+        list.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const input = document.getElementById("task");
+      if (!input.value.trim()) {
+        alert("আগে পড়ার কাজটি লেখো!");
+        return;
+      }
+
+      tasks.push({ name: input.value.trim(), done: false });
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+      input.value = "";
+      renderTasks();
+    }
+
+    function saveGoal() {
+      const goal = document.getElementById("goal").value.trim();
+      localStorage.setItem("studyGoal", goal);
+      document.getElementById("savedGoal").textContent =
+        "তোমার লক্ষ্য: " + goal;
+    }
+
+    document.getElementById("goal").value =
+      localStorage.getItem("studyGoal") || "";
+
+    document.getElementById("savedGoal").textContent =
+      localStorage.getItem("studyGoal")
+        ? "তোমার লক্ষ্য: " + localStorage.getItem("studyGoal")
+        : "";
+
+    renderTasks();
+  </script>
+</body>
+</html>
+
